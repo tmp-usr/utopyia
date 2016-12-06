@@ -3,7 +3,7 @@ class Aligner(object):
 #        Current alignment tool is STAR. Other option is kallisto.
     """
     def __init__(self, fastq_pair, *args, **kwargs):
-        self.output_prefix= "hamza"
+        self.output_prefix= "star_sorted_"
         self.fastq_pair= fastq_pair
         self.init_attr(kwargs)
         
@@ -72,4 +72,6 @@ class Aligner(object):
         --outSAMtype BAM SortedByCoordinate --outSAMheaderHD @HD VN:1.4
         --outFileNamePrefix %s """ %(self.genome_dir2, self.fastq_pair[0],
                 self.fastq_pair[1], self.output_prefix)
-        
+ 
+
+
