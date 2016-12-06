@@ -1,4 +1,4 @@
-import glob,os
+import os
 #learner
 class FastQPairLearner(object):
     """
@@ -8,13 +8,10 @@ class FastQPairLearner(object):
         
     """
     
-    def __init__(self, input_dir, compression_format="bz2"):
+    def __init__(self, files, compression_format="bz2"):
         
-        self.input_dir= input_dir
-        self.compression_format= compression_format
-        
-        self.input_files= glob.glob(os.path.join(self.input_dir, 
-            "*.%s" % compression_format))
+        self.compression_format= compression_format  
+        self.input_files= files
         
     def yield_pairs(self):
         for absolute_file_path in self.input_files:
