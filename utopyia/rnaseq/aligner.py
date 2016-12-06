@@ -1,15 +1,23 @@
+
+
 class Aligner(object):
     """
-#        Current alignment tool is STAR. Other option is kallisto.
+        Current alignment tool is STAR. Other option is kallisto.
+    
+    usage:
+        Aligner(fastq_pair, genome_dir1="", genome_dir2="", genome_fasta_path="", 
+                sjdb_file_chr_start_end="", sam_out="", gtf_out="", 
+                count_out= "")
+
     """
     def __init__(self, fastq_pair, *args, **kwargs):
         self.output_prefix= "star_sorted_"
         self.fastq_pair= fastq_pair
-        self.init_attr(kwargs)
+        self.init_attr(**kwargs)
         
 
 
-    def init_attr(self, **kwargs)
+    def init_attr(self, **kwargs):
         if "genome_dir1" in kwargs:
             self.genome_dir1= kwargs["genome_dir1"] 
 
@@ -43,13 +51,14 @@ class Aligner(object):
     def star_step_1(self):
         command_line= """STAR --genomeDir %s --readFilesIn %s %s 
         --runThreadN 16 --outFilterMultimapScoreRange 1 
+        --readFilesCommand gunzip -c
         --outFilterMultimapNmax 20 --outFilterMismatchNmax 10 
         --alignIntronMax 500000 --alignMatesGapMax 1000000 
         --sjdbScore 2 --alignSJDBoverhangMin 1 --genomeLoad NoSharedMemory 
         --outFilterMatchNminOverLread 0.33 --outFilterScoreMinOverLread 0.33 
         --sjdbOverhang 100 --outSAMstrandField intronMotif 
-        --outSAMtype None --outSAMmode None """ % 
-        (self.genome_dir1, self.fastq_pair[0], self.fastq_pair[1])
+        --outSAMtype None --outSAMmode None """ % (
+                self.genome_dir1, self.fastq_pair[0], self.fastq_pair[1])
 
 
     def star_step_2(self):
@@ -62,6 +71,7 @@ class Aligner(object):
     def star_step_3(self):
         command_line= """STAR --genomeDir %s --readFilesIn %s %s 
         --runThreadN 16 --outFilterMultimapScoreRange 1 
+        --readFilesCommand gunzip -c
         --outFilterMultimapNmax 20 --outFilterMismatchNmax 10 
         --alignIntronMax 500000 --alignMatesGapMax 1000000 
         --sjdbScore 2 --alignSJDBoverhangMin 1 
