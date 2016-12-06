@@ -1,4 +1,4 @@
-class Annotator(object):
+class Aligner(object):
     """
 #        Current alignment tool is STAR. Other option is kallisto.
     """
