@@ -1,3 +1,0 @@
-exec > "star_sorted__STARtmp/tmp.fifo.read1"
-echo FILE 0
-gunzip   -c      "/home/adilm/repos/utopyia/utopyia/rnaseq/test_data/reads_1.fastq.gz"
