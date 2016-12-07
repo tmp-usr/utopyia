@@ -3,7 +3,6 @@ import os
 
 from project_objects import Sample, Replicate, Lane
 
-
 import pdb
 
 class Project(object):
@@ -61,5 +60,6 @@ class Project(object):
 
     def split_fastq_files(self):
         pass
+
 
 

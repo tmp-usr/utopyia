@@ -54,7 +54,7 @@ class Aligner(object):
 
     def align_fastq_pair(self, aligner= "star"):
         if aligner == "star":
-            command_line_1 = star_pass_1(self.genome_dir1, self.fastq_pair, self.tmp_output_dir_1)
+            command_line_1 = star_pass_1(self.genome_dir1, self.fastq_pair, self.tmp_output_dir_1, self.output_dir)
             command_line_2 = star_pass_2(self.genome_dir2, self.genome_fasta_path, self.sjdb_file_chr_start_end)
             command_line_3 = star_pass_3(self.genome_dir2, self.fastq_pair, self.tmp_output_dir_2, self.output_dir)
 

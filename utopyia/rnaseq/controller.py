@@ -1,24 +1,45 @@
 import os
+import shutil
 
 from aligner import Aligner
 
+### TODO: define s_no
+
+
+
+tmp_dir= os.environ["SNIC_TMP"]
+output_base= tmp_dir
 
 genome_dir1= "/proj/b2016253/nobackup/genomeDir"
-genome_dir2= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/genomeDir"
+
+genome_dir2= os.path.join(tmp_dir, "genomeDir_%s" %(s_no))
+if not os.path.exists(genome_dir2):
+    os.mkdir(genome_dir2)
+
+#genome_dir2= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/genomeDir"
 genome_dir3= genome_dir2
 genome_fasta_path= "/proj/b2016253/nobackup/GRCh38.d1.vd1.fa"
 
 
 output_dir= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/"
-tmp_output_dir_1= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/tmp_1/"
-tmp_output_dir_2= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/tmp_2/"
 
-sjdb_file_chr_start_end= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/sj.out.tab"
+tmp_output_dir_1= os.path.join(tmp_dir, "tmp_1/")
+tmp_output_dir_2= os.path.join(tmp_dir, "tmp_2/")
+#tmp_output_dir_2= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/tmp_2/"
+
+if os.path.exists(tmp_output_dir_1):
+    shutil.rmtree(tmp_output_dir_1)
+
+if os.path.exists(tmp_output_dir_2):
+    shutil.rmtree(tmp_output_dir_2)
+
+
+
+sjdb_file_chr_start_end= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/SJ.out.tab"
 
 sam_output= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/test.Aligned.sortedByCoord.out.bam"
 gtf_output= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/test.gtf"
 count_output= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_output/test.count"
-
 
 test_data_base= "/home/adilm/repos/utopyia/utopyia/rnaseq/test_data/"
 
