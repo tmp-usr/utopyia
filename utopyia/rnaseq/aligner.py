@@ -43,8 +43,8 @@ class Aligner(object):
         if "sam_out" in kwargs:
             self.sam_out = kwargs["sam_out"]
 
-        if "gtf_out" in kwargs:
-            self.gtf_out= kwargs["gtf_out"]
+        if "gtf_file" in kwargs:
+            self.gtf_out= kwargs["gtf_file"]
 
         if "count_out" in kwargs:
             self.count_out= kwargs["count_out"]
@@ -57,7 +57,7 @@ class Aligner(object):
             command_line_1 = star_pass_1(self.genome_dir1, self.fastq_pair, self.tmp_output_dir_1, self.output_dir)
             command_line_2 = star_pass_2(self.genome_dir2, self.genome_fasta_path, self.sj_out)
             command_line_3 = star_pass_3(self.genome_dir2, self.fastq_pair, self.tmp_output_dir_2, self.output_dir)
-            command_line_4 = generate_counts(self.sam_out)
+            command_line_4 = generate_counts(self.sam_out, self.gtf_file, self.count_out)
 
 
             s1= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
@@ -70,4 +70,5 @@ class Aligner(object):
             s3= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
                                 job_name= "test_1", email= "", command_line=command_line_3)
             
-
+            s4= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
+                                job_name= "test_1", email= "", command_line=command_line_4)

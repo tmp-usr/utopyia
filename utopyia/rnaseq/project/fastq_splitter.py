@@ -3,7 +3,7 @@ import subprocess
 import gzip
 import shutil
 
-from janitor.fastq_parser import FastQParser
+from fastq_parser import FastQParser
 
 
 class FastQSplitter(object):
