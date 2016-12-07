@@ -16,9 +16,9 @@ class GenCounts(DependencyMetaTask):
 
 
     def gen_counts(self):
-        command_line= """samtools view -F 4 %s |
-        htseq-count -m intersection-nonempty -i 
-        gene_id -r pos -s no -t exon - %s > %s
+        command_line= """
+        module load samtools/1.1
+        samtools view -F 4 %s | htseq-count -m intersection-nonempty -i gene_id -r pos -s no -t exon - %s > %s
         """ %(sam_out, gtf_out, count_out)
 
 

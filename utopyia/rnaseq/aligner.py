@@ -16,7 +16,7 @@ class Aligner(object):
     def __init__(self, fastq_pair, *args, **kwargs):
         self.fastq_pair= fastq_pair
         self.init_attr(**kwargs)
-        self.aligner_path= "/sw/mf/milou/bioinfo-tools/pipeline" 
+        #self.aligner_path= "/sw/mf/milou/bioinfo-tools/pipeline" 
 
 
     def init_attr(self, **kwargs):
@@ -30,8 +30,8 @@ class Aligner(object):
         if "genome_fasta_path" in kwargs:
             self.genome_fasta_path= kwargs["genome_fasta_path"]
 
-        if "sjdb_file_chr_start_end" in kwargs:
-            self.sjdb_file_chr_start_end= kwargs["sjdb_file_chr_start_end"]
+        if "sj_out" in kwargs:
+            self.sj_out= kwargs["sj_out"]
 
         if "tmp_output_dir_1" in kwargs:
             self.tmp_output_dir_1= kwargs["tmp_output_dir_1"]
@@ -55,8 +55,9 @@ class Aligner(object):
     def align_fastq_pair(self, aligner= "star"):
         if aligner == "star":
             command_line_1 = star_pass_1(self.genome_dir1, self.fastq_pair, self.tmp_output_dir_1, self.output_dir)
-            command_line_2 = star_pass_2(self.genome_dir2, self.genome_fasta_path, self.sjdb_file_chr_start_end)
+            command_line_2 = star_pass_2(self.genome_dir2, self.genome_fasta_path, self.sj_out)
             command_line_3 = star_pass_3(self.genome_dir2, self.fastq_pair, self.tmp_output_dir_2, self.output_dir)
+            command_line_4 = generate_counts(self.sam_out)
 
 
             s1= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
@@ -68,4 +69,5 @@ class Aligner(object):
 
             s3= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
                                 job_name= "test_1", email= "", command_line=command_line_3)
+            
 

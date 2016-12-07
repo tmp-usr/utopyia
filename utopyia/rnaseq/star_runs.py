@@ -24,7 +24,7 @@ STAR \
 """ % (fastq_pair[0], fastq_pair[1], genome_dir1, tmp_output_dir_1, output_dir)
     return command_line
 
-def star_pass_2(genome_dir2, genome_fasta_path, sjdb_file_chr_start_end):
+def star_pass_2(genome_dir2, genome_fasta_path, sj_out):
     command_line= """
 module load bioinfo-tools star/2.4.2a
 STAR \
@@ -34,7 +34,7 @@ STAR \
 --sjdbOverhang 100 \
 --sjdbFileChrStartEnd %s \
 --runThreadN 16
-""" % (genome_dir2, genome_fasta_path, sjdb_file_chr_start_end )
+""" % (genome_dir2, genome_fasta_path, sj_out )
     return command_line
 
 def star_pass_3(genome_dir2, fastq_pair, tmp_output_dir_2, output_prefix):
@@ -66,3 +66,11 @@ STAR \
 --outFileNamePrefix %s
 """ %(genome_dir2, fastq_pair[0], fastq_pair[1], tmp_output_dir_2, output_prefix)
     return command_line
+
+
+def generate_counts(bam_out, gtf_file, count_out):
+    command_line= """
+module load samtools/1.1
+samtools view -F 4 %s | htseq-count -m intersection-nonempty -i gene_id -r pos -s no -t exon - %s > %s 
+""" % (bam_out, gtf_file, count_out)
+
