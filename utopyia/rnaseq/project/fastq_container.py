@@ -80,19 +80,15 @@ class FastQContainer(object):
 
 
             if split > 1:
-
                 self.splitter_1= FastQSplitter(file_path= self.merged_pair[0], root_dir= root_dir,
                         sample_name= self.name, split_times= split )
                 self.splitter_2= FastQSplitter(file_path= self.merged_pair[1], root_dir= root_dir,
                         sample_name= self.name, split_times= split)
 
-
                 return zip(self.splitter_1.split_fastq_files, self.splitter_2.split_fastq_files )
 
             else:
                 return cc1, cc2
-
-
 
 
 
