@@ -21,7 +21,7 @@ STAR \
 --outSAMstrandField intronMotif \
 --outSAMtype None \
 --outFileNamePrefix %s
-""" % (fastq_pair[0], fastq_pair[1], genome_dir1, tmp_output_dir_1, output_dir)
+""" % (fastq_pair.reads_1, fastq_pair.reads_2, genome_dir1, tmp_output_dir_1, output_dir)
     return command_line
 
 def star_pass_2(genome_dir2, genome_fasta_path, sj_out):
@@ -64,7 +64,7 @@ STAR \
 --outSAMtype BAM SortedByCoordinate \
 --outSAMheaderHD @HD VN:1.4 \
 --outFileNamePrefix %s
-""" %(genome_dir2, fastq_pair[0], fastq_pair[1], tmp_output_dir_2, output_prefix)
+""" %(genome_dir2, fastq_pair.reads_1, fastq_pair.reads_2, tmp_output_dir_2, output_prefix)
     return command_line
 
 

@@ -49,17 +49,8 @@ class Project(object):
                 self.samples.append(s)
         
 
-    def fastq_pairs(self):
-        pass
-
     def concatenate_replicates(self):
         assert self.replication_level != "lane", "Current replication level is not recommended for concatenation!"
-
-    def decompress_replicates(self):
-        pass
-
-    def split_fastq_files(self):
-        pass
 
 
 

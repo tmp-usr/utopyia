@@ -44,7 +44,7 @@ class Aligner(object):
             self.sam_out = kwargs["sam_out"]
 
         if "gtf_file" in kwargs:
-            self.gtf_out= kwargs["gtf_file"]
+            self.gtf_file= kwargs["gtf_file"]
 
         if "count_out" in kwargs:
             self.count_out= kwargs["count_out"]

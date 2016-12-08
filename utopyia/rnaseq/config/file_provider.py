@@ -1,5 +1,5 @@
 import os
-
+import shutil
 from rnaseq_config import *
 
 
@@ -12,10 +12,10 @@ class Reference(object):
 
 
 class TemporaryOutput(object):
-    def __init__(self, root_dir, directories=[], files= []):
+    def __init__(self, root_dir, directories=[], file_types= []):
         self.root_dir= root_dir
         self.directories= directories
-        self.files= files
+        self.file_types= file_types
 
 
     @property
@@ -34,7 +34,7 @@ class TemporaryOutput(object):
         if create:
             if os.path.exists(tmp_dir):
                shutil.rmtree(tmp_dir) 
-            os.path.mkdir(tmp_dir)
+            os.makedirs(tmp_dir)
 
         return tmp_dir
 
@@ -44,23 +44,29 @@ class TemporaryOutput(object):
 
 
 class FileProviderBase(object):
+    
     def __init__(self, ref_genome_dir, ref_fasta_file, ref_gtf_file, tmp_root_dir, output_dir):
         self.reference= Reference(ref_genome_dir, ref_fasta_file, ref_gtf_file)
-        tmp_dirs= ["merge_split", "decompression", "alignment", "reindexed_genome"]
+        tmp_dirs= ["merge_split", "decompression", "alignment", "reindexed_genome",
+                   "tmp_output_dir_1", "tmp_output_dir_2"]
         self.tmp_dirs= TemporaryOutput(tmp_root_dir, tmp_dirs).dirs
         self.output_dir= output_dir
 
 
 
 class FileProvider(FileProviderBase):
-    def __init__(self,  fastq_pair):
+    def __init__(self):
         output_types= {"sam": ".sam", "sj":"sj.txt", "count": "count.txt"}
-        FileProviderBase.__init__(self, ref_genome_dir, ref_fasta_file, ref_gtf_file, tmp_root_dir, output_dir)
-        self.fastq_pair= fastq_pair
+        FileProviderBase.__init__(self, ref_genome_dir, ref_fasta_file, ref_gtf_file, tmp_root_dir, output_base_dir)
         self.output_types= output_types
+        self.outputs= None
 
-    @property
-    def outputs(self):
-        return {output_type: os.path.join(self.output_dir, "%s_%s" %(self.fastq_pair.name, file_name)) for output_type, file_name in self.output_types.iteritems()}
+    def set_outputs(self, fastq_pair):
+        self.outputs= {output_type: os.path.join(self.output_dir, "%s_%s" %(fastq_pair.name, file_name)) for output_type, file_name in self.output_types.iteritems()}
 
+    def get_output_file(self, fastq_pair, output_type):
+        if not self.outputs:
+            self.set_outputs(fastq_pair)
 
+        else:
+            return self.outputs[output_type]
