@@ -8,6 +8,7 @@ from project.project import Project
 
 
 p= Project("colon_cancer", "/proj/b2014274/INBOX/F.Ponten_16_01", replication_level = "lane")
+p= Project("mock", "/Users/kemal/Desktop/postdoc/projects/mock", replication_level = "lane")
 
 
 
