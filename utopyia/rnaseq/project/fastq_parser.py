@@ -1,4 +1,4 @@
-mport getopt, sys
+import getopt, sys
 from itertools import islice,chain
 
 
