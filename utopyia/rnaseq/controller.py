@@ -5,7 +5,7 @@ from aligner import Aligner
 from project.project import Project
 from config.file_provider import FileProvider
 
-
+import time
 
 ### TODO: define s_no
 
@@ -16,13 +16,14 @@ fp= FileProvider()
 
 r0= p.samples[0].replicates[0]
 
-r0.concat_split_pairs(merge_split_dir= fp.tmp_dirs["merge_split"], split= 10)
+t0= time.time()
+r0.concat_split_pairs(merge_split_dir= fp.tmp_dirs["merge_split"], split= 1)
+
 pairs= [pair for pair in r0.fastq_pairs]
 
 
 fastq_pair= pairs[0]
 
-aligner= """
 
 aln= Aligner(fastq_pair= fastq_pair, 
         genome_dir1= fp.reference.genome_dir, genome_dir2= fp.tmp_dirs["reindexed_genome"], 
@@ -34,7 +35,10 @@ aln= Aligner(fastq_pair= fastq_pair,
         output_dir= fp.output_dir)
 
 aln.align_fastq_pair()
-"""
+
+
+t1= time.time()
+print t1- t0
 
 trash_0="""
 #### disk space for large temporary files

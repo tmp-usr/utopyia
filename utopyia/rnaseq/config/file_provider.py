@@ -34,7 +34,11 @@ class TemporaryOutput(object):
         if create:
             if os.path.exists(tmp_dir):
                shutil.rmtree(tmp_dir) 
-            os.makedirs(tmp_dir)
+            
+            if "tmp_output" not in tmp_type:
+                os.makedirs(tmp_dir)
+
+
 
         return tmp_dir
 
