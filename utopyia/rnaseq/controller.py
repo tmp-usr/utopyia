@@ -10,8 +10,8 @@ from config.file_provider import FileProvider
 ### TODO: define s_no
 
 
-#p= Project("colon_cancer", "/proj/b2014274/INBOX/F.Ponten_16_01", replication_level = "lane")
-p= Project("mock", "/Users/kemal/repos/utopyia/utopyia/rnaseq/test_data/mock/", replication_level = "lane")
+p= Project("colon_cancer", "/proj/b2014274/INBOX/F.Ponten_16_01", replication_level = "lane")
+#p= Project("mock", "/Users/kemal/repos/utopyia/utopyia/rnaseq/test_data/mock/", replication_level = "lane")
 fp= FileProvider()
 
 r0= p.samples[0].replicates[0]
@@ -21,6 +21,9 @@ pairs= [pair for pair in r0.fastq_pairs]
 
 
 fastq_pair= pairs[0]
+
+aligner= """
+
 aln= Aligner(fastq_pair= fastq_pair, 
         genome_dir1= fp.reference.genome_dir, genome_dir2= fp.tmp_dirs["reindexed_genome"], 
         genome_fasta_path= fp.reference.fasta_file, sj_out= fp.get_output_file(fastq_pair, "sj"), 
@@ -31,7 +34,7 @@ aln= Aligner(fastq_pair= fastq_pair,
         output_dir= fp.output_dir)
 
 aln.align_fastq_pair()
-
+"""
 
 trash_0="""
 #### disk space for large temporary files
