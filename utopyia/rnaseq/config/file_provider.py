@@ -1,36 +1,29 @@
 import os
 import shutil
+
+from janitor.output_provider import OutputProvider
+
 from rnaseq_config import *
 
+import pdb
 
-class Reference(object):
-    def __init__(self, species_name= "homo sapiens", genome_dir= "", fasta_file= "", gtf_file= ""):
+
+class ReferenceProvider(OutputProvider): 
+    def __init__(self, root_dir, genome_dir= "genome_dir", fasta_file= "", 
+                      gtf_file= "", species_name= "homo sapiens"):
+
+        dirs= {"genome_dir": os.path.join(root_dir, genome_dir)}
+        files= {"fasta_file": os.path.join(root_dir, fasta_file), 
+                "gtf_file": os.path.join(root_dir, gtf_file)}
+
+        OutputProvider.__init__(self, root_dir, dirs, files)
         self.species_name= species_name
-        self.genome_dir= genome_dir
-        self.fasta_file= fasta_file
-        self.gtf_file= gtf_file
 
 
-class TemporaryOutput(object):
-    def __init__(self, root_dir, directories=[], file_types= []):
-        self.root_dir= root_dir
-        self.directories= directories
-        self.file_types= file_types
-
-
-    @property
-    def dirs(self):
-        return {tmp_type: self.get_dir(tmp_type) for tmp_type in self.directories}
-                
-    @property
-    def files(self):
-        return {tmp_type: self.get_files(tmp_type) for tmp_type in self.files}
-                
-
-
-    def get_dir(self, tmp_type, create= True):
-        tmp_dir= os.path.join(self.root_dir, tmp_type)
+class TmpProvider(OutputProvider):
+    def __init__(self, root_dir):
         
+<<<<<<< HEAD
         if create:
             if os.path.exists(tmp_dir):
                shutil.rmtree(tmp_dir) 
@@ -39,38 +32,43 @@ class TemporaryOutput(object):
                 os.makedirs(tmp_dir)
 
 
-
-        return tmp_dir
-
-    def get_file(self, tmp_type):
-        return os.path.join(root_dir, tmp_type)
-
-
-
-class FileProviderBase(object):
-    
-    def __init__(self, ref_genome_dir, ref_fasta_file, ref_gtf_file, tmp_root_dir, output_dir):
-        self.reference= Reference(ref_genome_dir, ref_fasta_file, ref_gtf_file)
-        tmp_dirs= ["merge_split", "decompression", "alignment", "reindexed_genome",
+=======
+        tmp_dirs= ["merge_split_dir", "decompression_dir", "reindexed_genome_dir",
                    "tmp_output_dir_1", "tmp_output_dir_2"]
-        self.tmp_dirs= TemporaryOutput(tmp_root_dir, tmp_dirs).dirs
-        self.output_dir= output_dir
+>>>>>>> d6057d4cb4a1f7be24e901e6d724c0b0836ca241
+
+        tmp_dirs= {dir_name: os.path.join(root_dir, dir_name) for dir_name in tmp_dirs}
+        OutputProvider.__init__(self, root_dir, tmp_dirs)
 
 
+class AlignmentProvider(OutputProvider):
+    def __init__(self, root_dir, sample_name):
+        files= {"sam_file": os.path.join(root_dir, sample_name, "%s.sam" %sample_name ), 
+                "sj_file": os.path.join(root_dir, sample_name, "%s.sj" %sample_name), 
+                "count_file": os.path.join(root_dir, sample_name, "%s.count" %sample_name)}
+        dirs= {
+                sample_name: os.path.join(root_dir, sample_name)
+                } 
+        
+        OutputProvider.__init__(self, root_dir, dirs= dirs, files= files)
 
-class FileProvider(FileProviderBase):
-    def __init__(self):
-        output_types= {"sam": ".sam", "sj":"sj.txt", "count": "count.txt"}
-        FileProviderBase.__init__(self, ref_genome_dir, ref_fasta_file, ref_gtf_file, tmp_root_dir, output_base_dir)
-        self.output_types= output_types
-        self.outputs= None
+        
 
-    def set_outputs(self, fastq_pair):
-        self.outputs= {output_type: os.path.join(self.output_dir, "%s_%s" %(fastq_pair.name, file_name)) for output_type, file_name in self.output_types.iteritems()}
+class RNASeqOutputProvider(OutputProvider):
+    
+    def __init__(self, output_root_dir= ""):
 
-    def get_output_file(self, fastq_pair, output_type):
-        if not self.outputs:
-            self.set_outputs(fastq_pair)
+        self.output_root_dir= output_root_dir
 
-        else:
-            return self.outputs[output_type]
+        self.ref_provider= ReferenceProvider(root_dir= ref_root_dir, 
+                genome_dir= ref_genome_dir,
+                fasta_file= ref_fasta_file ,  
+                gtf_file= ref_gtf_file)
+
+        self.tmp_provider= TmpProvider(root_dir= tmp_root_dir)
+        self.alignment_root_dir= os.path.join(self.output_root_dir, "alignment")
+
+
+    def get_alignment_provider(self, sample_name):
+        return AlignmentProvider(self.alignment_root_dir, sample_name)
+    
