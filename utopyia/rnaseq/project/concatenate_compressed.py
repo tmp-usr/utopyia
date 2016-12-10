@@ -40,9 +40,10 @@ class ConcatenateCompressed(object):
                         merged_file_.write(f.read())    
        
         else:
-            command_line= "cat %s > %s" %(" ".join(self.compressed_file_paths), self.merged_file_path)
-            p = subprocess.Popen(command_line, shell= True, stderr=subprocess.STDOUT)
-            out, err = p.communicate()
+            pass
+        #    command_line= "cat %s > %s" %(" ".join(self.compressed_file_paths), self.merged_file_path)
+        #    p = subprocess.Popen(command_line, shell= True, stderr=subprocess.STDOUT)
+        #    out, err = p.communicate()
         
         if not self.keep_originals:
             for f in self.compressed_file_paths:
