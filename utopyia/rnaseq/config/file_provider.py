@@ -23,7 +23,6 @@ class ReferenceProvider(OutputProvider):
 class TmpProvider(OutputProvider):
     def __init__(self, root_dir):
         
-<<<<<<< HEAD
         if create:
             if os.path.exists(tmp_dir):
                shutil.rmtree(tmp_dir) 
@@ -31,11 +30,8 @@ class TmpProvider(OutputProvider):
             if "tmp_output" not in tmp_type:
                 os.makedirs(tmp_dir)
 
-
-=======
         tmp_dirs= ["merge_split_dir", "decompression_dir", "reindexed_genome_dir",
                    "tmp_output_dir_1", "tmp_output_dir_2"]
->>>>>>> d6057d4cb4a1f7be24e901e6d724c0b0836ca241
 
         tmp_dirs= {dir_name: os.path.join(root_dir, dir_name) for dir_name in tmp_dirs}
         OutputProvider.__init__(self, root_dir, tmp_dirs)

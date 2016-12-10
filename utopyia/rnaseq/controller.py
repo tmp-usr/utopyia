@@ -24,7 +24,12 @@ pairs= [pair for pair in r0.fastq_pairs]
 
 fastq_pair= pairs[0]
 
+t1= time.time()
 
+print (t1- t0))
+
+
+a= """
 aln= Aligner(fastq_pair= fastq_pair, 
         genome_dir1= fp.reference.genome_dir, genome_dir2= fp.tmp_dirs["reindexed_genome"], 
         genome_fasta_path= fp.reference.fasta_file, sj_out= fp.get_output_file(fastq_pair, "sj"), 
@@ -39,7 +44,7 @@ aln.align_fastq_pair()
 
 t1= time.time()
 print t1- t0
-
+"""
 trash_0="""
 #### disk space for large temporary files
 tmp_dir= os.environ["SNIC_TMP"]
