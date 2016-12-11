@@ -11,47 +11,42 @@ import time
 op= RNASeqIOProvider()
 input_root_dir= op.input_root_dir
 
+#### tmp
+tmp_output_dir_1=  op.tmp_provider.tmp_output_dir_1.path
+tmp_output_dir_2=   op.tmp_provider.tmp_output_dir_2.path
+merge_split_dir= op.tmp_provider.merge_split_dir.path
+
 #### reference
-genome_dir1= op.ref_provider.genome_dir
-genome_dir2= op.tmp_provider.reindexed_genome_dir
-genome_fasta_path= op.ref_provider.fasta_file, 
-gtf_file= fp.reference.gtf_file, 
+genome_dir1= op.ref_provider.ref_genome_dir.path
+genome_dir2= op.tmp_provider.reindexed_genome_dir.path
+genome_fasta_path= op.ref_provider.ref_fasta_file.path
+gtf_file= op.ref_provider.ref_gtf_file.path
+
+
+####################
+p= Project("mock", input_root_dir, replication_level = "lane")
+
+
+
+r0= p.samples[0].replicates[0]
+r0.concat_split_pairs(merge_split_dir= merge_split_dir, split= 1)
+pairs= [pair for pair in r0.fastq_pairs]
+fastq_pair= pairs[0]
+
+
+####################
 
 
 #### alignment
 aln_provider= op.get_alignment_provider(fastq_pair.name)
 
-aln_output_dir= aln_provider.__dict__[fastq_pair.name]
-sj_out=  aln_provider.sj_file
-sam_out=  aln_provider.sam_file
-count_out= aln_provider.count_file
+aln_output_dir= aln_provider.__dict__[fastq_pair.name].path
+sj_out=  aln_provider.sj_file.path
+sam_out=  aln_provider.sam_file.path
+count_out= aln_provider.count_file.path
 
-
-#### tmp
-tmp_output_dir_1=  op.tmp_provider.tmp_output_dir_1
-tmp_output_dir_2=   op.tmp_provider.tmp_output_dir_2
-merge_split_dir= op.tmp_provider.merge_split_dir
-
-
-
-
-p= Project("colon_cancer", input_root_dir, replication_level = "lane")
-
-
-r0= p.samples[0].replicates[0]
 
 t0= time.time()
-r0.concat_split_pairs(merge_split_dir= merge_split_dir, split= 1)
-
-pairs= [pair for pair in r0.fastq_pairs]
-
-
-fastq_pair= pairs[0]
-
-t1= time.time()
-
-print (t1- t0))
-
 aln= Aligner(
     fastq_pair= fastq_pair, 
     genome_dir1= genome_dir1, genome_dir2= genome_dir2, 
@@ -64,11 +59,9 @@ aln= Aligner(
 
 aln.align_fastq_pair()
 
-
 t1= time.time()
-print t1- t0
 
-
+print (t1-t0)
 
 
 trash_0="""
