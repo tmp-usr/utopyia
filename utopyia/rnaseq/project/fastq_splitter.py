@@ -39,31 +39,28 @@ class FastQSplitter(object):
         """
             BZ2 support will be added. Currently only works for gzipped fastq files.
         """
-                
-        command_line1=  "zgrep -Ec '$' %s" % os.path.abspath(self.file_path)
-        p = subprocess.Popen(command_line1, shell=True, stdout= subprocess.PIPE, stderr= subprocess.PIPE)
-        n_lines, err = p.communicate()
-        n_lines= int(n_lines)
+        n_lines= self.total_lines_compressed        
         n_line_per_file= n_lines / 4 / self.split_times 
 
         ### count the total lines in a compressed file
-        if self.compressed:
-            handle= gzip.open(self.file_path, "rb")
-            seq_handle= FastQParser(handle).fastq_sequences
-            
-            j= 0
-            for i, seq in enumerate(seq_handle):
-                if i % n_line_per_file == 0:
-                    j+=1
-                    if j <= self.split_times:
-                        split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq.gz" % (self.split_prefix, j))
-                        split_fastq= gzip.open(split_fastq_path, "wb")
-                        self.split_fastq_files.append(os.path.abspath(split_fastq_path))            
-                    if i > 0:
-                        yield split_fastq_path
-                split_fastq.write(str(seq))
-                    
-                 
+        handle= gzip.open(self.file_path, "rb")
+        seq_handle= FastQParser(handle).fastq_sequences
+        
+        j= 0
+        for i, seq in enumerate(seq_handle):
+            if i % n_line_per_file == 0:
+                j+=1
+                if j <= self.split_times:
+                    split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq.gz" % (self.split_prefix, j))
+                    split_fastq= gzip.open(split_fastq_path, "wb")
+                    self.split_fastq_files.append(os.path.abspath(split_fastq_path))            
+                if i > 0:
+                    yield split_fastq_path
+            split_fastq.write(str(seq))
+                
+        ### yield the last file
+        yield split_fastq_path
+             
         #return self.split_fastq_files
         
 
@@ -104,9 +101,14 @@ class FastQSplitter(object):
         
         return int(result.strip().split()[0])
 
-
-
-
+    @property
+    def total_lines_compressed(self):
+        command_line1=  "zgrep -Ec '$' %s" % os.path.abspath(self.file_path)
+        p = subprocess.Popen(command_line1, shell=True, stdout= subprocess.PIPE, stderr= subprocess.PIPE)
+        n_lines, err = p.communicate()
+        return int(n_lines)
+        
+    
 
 trash = """
         command_line1=  "zgrep -Ec '$' %s" % os.path.abspath(self.file_path)
