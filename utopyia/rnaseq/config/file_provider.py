@@ -9,7 +9,7 @@ import pdb
 
 
 class ReferenceProvider(OutputProvider): 
-    def __init__(self, root_dir, genome_dir= "genome_dir", fasta_file= "", 
+    def __init__(self, root_dir, genome_dir= "genome_dir", fasta_file= "",
                       gtf_file= "", species_name= "homo sapiens"):
 
         dirs= {"genome_dir": os.path.join(root_dir, genome_dir)}
@@ -50,9 +50,9 @@ class AlignmentProvider(OutputProvider):
 
         
 
-class RNASeqOutputProvider(OutputProvider):
+class RNASeqOutputProvider(object):
     
-    def __init__(self, output_root_dir= ""):
+    def __init__(self, output_root_dir= project_base_dir):
 
         self.output_root_dir= output_root_dir
 

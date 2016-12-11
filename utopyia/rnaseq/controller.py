@@ -3,7 +3,7 @@ import shutil
 
 from aligner import Aligner
 from project.project import Project
-from config.file_provider import FileProvider
+from config.file_provider import RNASeqOutputProvider
 
 import time
 
@@ -12,7 +12,7 @@ import time
 
 p= Project("colon_cancer", "/proj/b2014274/INBOX/F.Ponten_16_01", replication_level = "lane")
 #p= Project("mock", "/Users/kemal/repos/utopyia/utopyia/rnaseq/test_data/mock/", replication_level = "lane")
-fp= FileProvider()
+op= RNASeqOutputProvider()
 
 r0= p.samples[0].replicates[0]
 
@@ -30,14 +30,15 @@ print (t1- t0))
 
 
 a= """
-aln= Aligner(fastq_pair= fastq_pair, 
-        genome_dir1= fp.reference.genome_dir, genome_dir2= fp.tmp_dirs["reindexed_genome"], 
-        genome_fasta_path= fp.reference.fasta_file, sj_out= fp.get_output_file(fastq_pair, "sj"), 
-        sam_out= fp.get_output_file(fastq_pair, "sam"), gtf_file= fp.reference.gtf_file, 
-        count_out= fp.get_output_file(fastq_pair, "count"), 
-        tmp_output_dir_1= fp.tmp_dirs["tmp_output_dir_1"], 
-        tmp_output_dir_2= fp.tmp_dirs["tmp_output_dir_2"],
-        output_dir= fp.output_dir)
+aln= Aligner(
+    fastq_pair= fastq_pair, 
+    genome_dir1= fp.reference.genome_dir, genome_dir2= fp.tmp_dirs["reindexed_genome"], 
+    genome_fasta_path= fp.reference.fasta_file, sj_out= fp.get_output_file(fastq_pair, "sj"), 
+    sam_out= fp.get_output_file(fastq_pair, "sam"), gtf_file= fp.reference.gtf_file, 
+    count_out= fp.get_output_file(fastq_pair, "count"), 
+    tmp_output_dir_1= fp.tmp_dirs["tmp_output_dir_1"], 
+    tmp_output_dir_2= fp.tmp_dirs["tmp_output_dir_2"],
+    output_dir= fp.output_dir)
 
 aln.align_fastq_pair()
 
