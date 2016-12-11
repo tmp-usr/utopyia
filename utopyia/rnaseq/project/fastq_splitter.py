@@ -22,7 +22,7 @@ class FastQSplitter(object):
         if self.split_times > 1:
             self.create_split_dir()
             if self.compressed:
-                self.split_compressed(True)
+                self.split_compressed()
             else:
                 self.split()
 
@@ -35,7 +35,7 @@ class FastQSplitter(object):
         os.makedirs(self.split_dir)
 
 
-    def split_compressed(self, bash= False):
+    def split_compressed(self):
         """
             BZ2 support will be added. Currently only works for gzipped fastq files.
         """
@@ -59,10 +59,12 @@ class FastQSplitter(object):
                         split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq.gz" % (self.split_prefix, j))
                         split_fastq= gzip.open(split_fastq_path, "wb")
                         self.split_fastq_files.append(os.path.abspath(split_fastq_path))            
+                    if i > 0:
+                        yield split_fastq_path
                 split_fastq.write(str(seq))
-            split_fastq.close()
-        
-        return self.split_fastq_files
+                    
+                 
+        #return self.split_fastq_files
         
 
 

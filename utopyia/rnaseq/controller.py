@@ -28,15 +28,21 @@ p= Project("mock", input_root_dir, replication_level = "lane")
 
 
 
+t0= time.time()
+
 r0= p.samples[0].replicates[0]
-r0.concat_split_pairs(merge_split_dir= merge_split_dir, split= 1)
+r0.concat_split_pairs(merge_split_dir= merge_split_dir, split= 20)
 pairs= [pair for pair in r0.fastq_pairs]
 fastq_pair= pairs[0]
+
+t1= time.time()
+
+print (t1-t0)
 
 
 ####################
 
-
+trash="""
 #### alignment
 aln_provider= op.get_alignment_provider(fastq_pair.name)
 
@@ -46,7 +52,6 @@ sam_out=  aln_provider.sam_file.path
 count_out= aln_provider.count_file.path
 
 
-t0= time.time()
 aln= Aligner(
     fastq_pair= fastq_pair, 
     genome_dir1= genome_dir1, genome_dir2= genome_dir2, 
@@ -58,11 +63,7 @@ aln= Aligner(
     output_dir= aln_output_dir)
 
 aln.align_fastq_pair()
-
-t1= time.time()
-
-print (t1-t0)
-
+"""
 
 trash_0="""
 #### disk space for large temporary files

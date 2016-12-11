@@ -28,16 +28,21 @@ p= Project("mock", input_root_dir, replication_level = "lane")
 #t0= time.time()
 
 r0= p.samples[0].replicates[0]
-r0.concat_split_pairs(merge_split_dir= merge_split_dir, split= 1)
+r0.concat_split_pairs(merge_split_dir= merge_split_dir, split= 20)
 pairs= [pair for pair in r0.fastq_pairs]
+
+
 fastq_pair= pairs[0]
 ####################
 
 
-#### alignment
-aln_provider= op.get_alignment_provider(fastq_pair.name)
+pair_name= "%s_%d" % (fastq_pair.name, 1 )
 
-aln_output_dir= aln_provider.__dict__[fastq_pair.name].path
+
+#### alignment
+aln_provider= op.get_alignment_provider(pair_name)
+
+aln_output_dir= aln_provider.__dict__[pair_name].path
 sj_out=  aln_provider.sj_file.path
 sam_out=  aln_provider.sam_file.path
 count_out= aln_provider.count_file.path
@@ -65,8 +70,11 @@ print "#######"
 print "Temporary Outputs"
 print "Merge/split dir: ", merge_split_dir
 print "Temporary alignment outputs: ", tmp_output_dir_1, tmp_output_dir_2
-
-
+print "#######"
+print "Fastq Pairs" 
+print pair_name
+print fastq_pair.reads_1
+print fastq_pair.reads_2
 
 
 

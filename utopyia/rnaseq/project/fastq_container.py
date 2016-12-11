@@ -113,6 +113,8 @@ class FastQContainer(object):
         if self.concat:
             if self.split:
                 for reads_1, reads_2 in zip(self.splitter_1.split_fastq_files, self.splitter_2.split_fastq_files ):
+                    ### check how this change is gonna effect
+                    self.name = os.path.basename(reads_1.replace(".fastq.gz",""))
                     yield FastQPair(reads_1, reads_2, self.name)
             else:
                 yield FastQPair(self.merged_pair[0], self.merged_pair[1], self.name)
