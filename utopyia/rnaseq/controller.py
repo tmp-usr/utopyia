@@ -29,15 +29,15 @@ gtf_file= op.ref_provider.ref_gtf_file.path
 p= Project("mock", input_root_dir, replication_level = "lane")
 
 
-
-t0= time.time()
-
 all_replicates=[]
 
 
 for sample in p.samples:
     for replicate in sample.replicates:
-        all_replicates.append(replicate)
+        for fastq_file in replicate.fastq_files:
+            print sample.name, replicate.name, fastq_file
+        
+        #all_replicates.append(replicate)
         
 
 def merge_split_align_replicate(replicate):
@@ -67,7 +67,7 @@ def merge_split_align_replicate(replicate):
 
     aln.align_fastq_pair()
 
-with Pool() as p:
-    p.map(merge_split_align_replicate, all_replicates[:2])
+#with Pool() as p:
+#    p.map(merge_split_align_replicate, all_replicates[:2])
 
 
