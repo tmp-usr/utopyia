@@ -17,7 +17,7 @@ class Slurm(object):
         self.batch() 
     
     def __str__(self):
-        return self.create_content()
+        return self.content
 
     
     @property
@@ -38,18 +38,21 @@ self.run_time, self.job_name, self.email, self.command_line)
         return content
     
     def batch(self):
-        self.batch_file= tempfile.NamedTemporaryFile(delete= False)
+        self.batch_file= tempfile.NamedTemporaryFile(delete= False, suffix= ".sh")
         self.batch_file.write(self.content)
         self.batch_file.close()
         #os.unlink(self.batch_file.name)
         
-        batch_line= "sbatch %s" %self.batch_file.name
+        #batch_line= "sbatch %s" %self.batch_file.name
         #batch_line= "bash %s \&" %self.batch_file.name
-        p= subprocess.Popen(batch_line, shell= True, 
-                stdout= subprocess.PIPE, stderr= subprocess.PIPE)
+        #p= subprocess.Popen(batch_line, shell= True, 
+        #        stdout= subprocess.PIPE, stderr= subprocess.PIPE)
 
-        out, err= p.communicate()
+        #out, err= p.communicate()
+        
 
-        print out 
-        print
-        print err
+        #print out 
+        #print
+        #print err
+
+        return self.content

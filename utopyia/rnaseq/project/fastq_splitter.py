@@ -3,28 +3,33 @@ import subprocess
 import gzip
 import shutil
 
+from janitor.batch_reader import BatchReader
+
 from fastq_parser import FastQParser
 
 
+from multiprocessing import Pool
+
 class FastQSplitter(object):
-    def __init__(self, file_path, root_dir, sample_name, compressed= True, split_times= 1):
+    def __init__(self, file_path, root_dir, sample_name, compressed= True, n_seq= 1000):
         
         self.file_path= file_path
-        split_basename= "%s_sp_%d" %(os.path.basename(file_path).replace(".fastq.gz",""), split_times)
+        split_basename= "%s_sp" % os.path.basename(file_path).replace(".fastq.gz","")
         self.split_dir= os.path.join(root_dir, sample_name, "split", split_basename)
 
         self.split_prefix= os.path.basename(self.file_path).replace(".fastq.gz","")
-        self.split_times= split_times
         self.split_fastq_files= []
         self.compressed= compressed
-        
+        self.n_seq= n_seq
 
-        if self.split_times > 1:
-            self.create_split_dir()
-            if self.compressed:
-                self.split_compressed()
-            else:
-                self.split()
+        self.create_split_dir()
+
+
+    def run(self):
+        if self.compressed:
+            return self.split_compressed(True)
+        else:
+            return self.split()
 
 
     def create_split_dir(self):
@@ -32,37 +37,43 @@ class FastQSplitter(object):
         if os.path.exists(self.split_dir):
             shutil.rmtree(self.split_dir)
         
-        os.makedirs(self.split_dir)
 
+        #### When the jobs are parallelyzed this might be
+        #### meaningful
+        if not os.path.exists(self.split_dir):
+            os.makedirs(self.split_dir)
 
-    def split_compressed(self):
+    
+    
+    def split_compressed(self, decompress= False):
         """
             BZ2 support will be added. Currently only works for gzipped fastq files.
         """
-        n_lines= self.total_lines_compressed        
-        n_line_per_file= n_lines / 4 / self.split_times 
+        #n_lines= self.total_lines_compressed        
+        #n_line_per_file= n_lines / 4 / self.split_times 
 
         ### count the total lines in a compressed file
         handle= gzip.open(self.file_path, "rb")
         seq_handle= FastQParser(handle).fastq_sequences
-        
-        j= 0
-        for i, seq in enumerate(seq_handle):
-            if i % n_line_per_file == 0:
-                j+=1
-                if j <= self.split_times:
-                    split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq.gz" % (self.split_prefix, j))
-                    split_fastq= gzip.open(split_fastq_path, "wb")
-                    self.split_fastq_files.append(os.path.abspath(split_fastq_path))            
-                if i > 0:
-                    yield split_fastq_path
-            split_fastq.write(str(seq))
-                
-        ### yield the last file
-        yield split_fastq_path
-             
-        #return self.split_fastq_files
-        
+       
+
+        br= BatchReader(self.n_seq ,seq_handle)
+    
+        for i, chunk in enumerate(br, 1):
+            if decompress:
+                split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq" % (self.split_prefix, i))
+                split_fastq= open(split_fastq_path, "w") 
+
+            else:
+
+                split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq.gz" % (self.split_prefix, i))
+                split_fastq= gzip.open(split_fastq_path, "w") 
+                    
+            split_fastq.write("".join(str(seq) for seq in chunk))
+            split_fastq.close()
+            yield split_fastq_path
+
+ 
 
 
     def split(self):
@@ -103,6 +114,10 @@ class FastQSplitter(object):
 
     @property
     def total_lines_compressed(self):
+        """
+            total number of lines in one of the colon cancer rna seq data: 36757144
+
+        """
         command_line1=  "zgrep -Ec '$' %s" % os.path.abspath(self.file_path)
         p = subprocess.Popen(command_line1, shell=True, stdout= subprocess.PIPE, stderr= subprocess.PIPE)
         n_lines, err = p.communicate()
@@ -131,4 +146,30 @@ trash = """
                         outp.write(inp.read(n_line_per_file))
 """
 
-
+trash="""
+    
+    j= 0
+    for i, seq in enumerate(seq_handle):
+        if i % n_line_per_file == 0:
+            j+=1
+            if j <= self.split_times:
+                
+                if decompress:
+                    split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq" % (self.split_prefix, j))
+                    split_fastq= open(split_fastq_path, "w") 
+                
+                else:
+                    split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq.gz" % (self.split_prefix, j))
+                    split_fastq= gzip.open(split_fastq_path, "wb")
+                
+                self.split_fastq_files.append(os.path.abspath(split_fastq_path))            
+            if i > 0:
+                yield split_fastq_path
+        
+        split_fastq.write(str(seq))
+            
+    ### yield the last file
+    yield split_fastq_path
+         
+    #return self.split_fastq_files
+    """

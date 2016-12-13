@@ -59,16 +59,10 @@ class Aligner(object):
             command_line_3 = star_pass_3(self.genome_dir2, self.fastq_pair, self.tmp_output_dir_2, self.output_dir)
             command_line_4 = generate_counts(self.sam_out, self.gtf_file, self.count_out)
 
+    
+            command_line= "\n".join([command_line_1, command_line_2, command_line_3, command_line_4])
 
-            s1= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
-                                job_name= "test_1", email= "", command_line=command_line_1)
-   
-
-            s2= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
-                                job_name= "test_1", email= "", command_line=command_line_2)
-
-            s3= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
-                                job_name= "test_1", email= "", command_line=command_line_3)
             
-            s4= Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
-                                job_name= "test_1", email= "", command_line=command_line_4)
+            print Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
+                                job_name= "test_1", email= "", command_line= command_line)
+            

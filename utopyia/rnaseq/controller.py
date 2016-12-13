@@ -1,73 +1,115 @@
 import os
 import shutil
+from itertools import izip
+
+
 
 from aligner import Aligner
 from project.project import Project
 from config.file_provider import RNASeqIOProvider
+from project.fastq_container import FastQPair
 
-from multiprocessing import Pool
+
+from multiprocessing import cpu_count
+from pathos.multiprocessing import ProcessingPool as Pool
+
 
 import time
 
 
-op= RNASeqIOProvider()
-input_root_dir= op.input_root_dir
-
-#### tmp
-tmp_output_dir_1=  op.tmp_provider.tmp_output_dir_1.path
-tmp_output_dir_2=   op.tmp_provider.tmp_output_dir_2.path
-merge_split_dir= op.tmp_provider.merge_split_dir.path
-
-#### reference
-genome_dir1= op.ref_provider.ref_genome_dir.path
-genome_dir2= op.tmp_provider.reindexed_genome_dir.path
-genome_fasta_path= op.ref_provider.ref_fasta_file.path
-gtf_file= op.ref_provider.ref_gtf_file.path
 
 
-####################
-p= Project("mock", input_root_dir, replication_level = "lane")
+class Controller(object):
+    def __init__(self, project_name, replication_level="lane"):
+
+        self.io_provider= RNASeqIOProvider()
+
+        self.input_root_dir= self.io_provider.input_root_dir
+
+        #### tmp
+        self.tmp_output_dir_1=  self.io_provider.tmp_provider.tmp_output_dir_1.path
+        self.tmp_output_dir_2=   self.io_provider.tmp_provider.tmp_output_dir_2.path
+        self.merge_split_dir= self.io_provider.tmp_provider.merge_split_dir.path
+
+        #### reference
+        self.genome_dir1= self.io_provider.ref_provider.ref_genome_dir.path
+        self.genome_dir2= self.io_provider.tmp_provider.reindexed_genome_dir.path
+        self.genome_fasta_path= self.io_provider.ref_provider.ref_fasta_file.path
+        self.gtf_file= self.io_provider.ref_provider.ref_gtf_file.path
 
 
-all_replicates=[]
+        ####################
+        self.project= Project(project_name, self.input_root_dir, replication_level = replication_level)
 
+        self.init_samples()
+        #self.run_parallel()
 
-for sample in p.samples:
-    for replicate in sample.replicates:
-        for fastq_file in replicate.fastq_files:
-            print sample.name, replicate.name, fastq_file
+    def init_samples(self):
+        self.all_replicates={}
+        for sample in self.project.samples:
+            for replicate in sample.replicates:
+                self.all_replicates[replicate] = sample
+                
+
+    def init_alignment(self, replicate):
+        """
+            Method where the actual pipeline takes place.
+        """
+        #for replicate in sample.replicates:
+        #    #self.all_replicates[replicate] = sample
         
-        #all_replicates.append(replicate)
+        sample= self.all_replicates[replicate]
+        pair1, pair2= replicate.concat_split_pairs(merge_split_dir= self.merge_split_dir, n_seq= 10000, sample_name= sample.name)
+
+        for reads_1, reads_2 in izip(pair1, pair2):
+            
+            #### alignment
+            
+
+            fastq_pair= FastQPair(reads_1, reads_2, name= replicate.name)
+
+            sample_name = self.all_replicates[replicate].name
+            
+            aln_name= "%s_%s" %(sample.name, replicate.name)
+            self.aln_provider= self.io_provider.get_alignment_provider(aln_name)
+
+            self.aln_output_dir= self.aln_provider.__dict__[aln_name].path
+            self.sj_out=  self.aln_provider.sj_file.path
+            self.sam_out=  self.aln_provider.sam_file.path
+            self.count_out= self.aln_provider.count_file.path
+
+
+            aln= Aligner(
+                fastq_pair= fastq_pair,
+                genome_dir1= self.genome_dir1, genome_dir2= self.genome_dir2, 
+                genome_fasta_path= self.genome_fasta_path, sj_out= self.sj_out, 
+                sam_out= self.sam_out, gtf_file= self.gtf_file, 
+                count_out= self.count_out, 
+                tmp_output_dir_1= self.tmp_output_dir_1, 
+                tmp_output_dir_2= self.tmp_output_dir_2,
+                output_dir= self.aln_output_dir)
+
+            aln.align_fastq_pair()
+
+
+    def run_parallel(self):
+        p= Pool(processes= 8)
+        p.map(self.init_alignment, self.all_replicates)#self.all_replicates)
         
 
-def merge_split_align_replicate(replicate):
-    r0= replicate
-    r0.concat_split_pairs(merge_split_dir= merge_split_dir, split= 1)
-    pairs= [pair for pair in r0.fastq_pairs]
-    fastq_pair= pairs[0]
-
-    #### alignment
-    aln_provider= op.get_alignment_provider(fastq_pair.name)
-
-    aln_output_dir= aln_provider.__dict__[fastq_pair.name].path
-    sj_out=  aln_provider.sj_file.path
-    sam_out=  aln_provider.sam_file.path
-    count_out= aln_provider.count_file.path
 
 
-    aln= Aligner(
-        fastq_pair= fastq_pair, 
-        genome_dir1= genome_dir1, genome_dir2= genome_dir2, 
-        genome_fasta_path= genome_fasta_path, sj_out= sj_out, 
-        sam_out= sam_out, gtf_file= gtf_file, 
-        count_out= count_out, 
-        tmp_output_dir_1= tmp_output_dir_1, 
-        tmp_output_dir_2= tmp_output_dir_2,
-        output_dir= aln_output_dir)
 
-    aln.align_fastq_pair()
 
-#with Pool() as p:
-#    p.map(merge_split_align_replicate, all_replicates[:2])
+
+if __name__ == "__main__":
+    print "a"
+    c= Controller("mock")
+    #c.init_alignment(c.all_replicates)
+    #[c.init_alignment(rep) for rep in c.all_replicates]
+    c.run_parallel() 
+    
+
+
 
 

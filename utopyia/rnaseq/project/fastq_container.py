@@ -7,6 +7,8 @@ from operator import itemgetter
 from concatenate_compressed import ConcatenateCompressed
 from fastq_splitter import FastQSplitter
 
+import pdb
+
 
 class FastQPair(object):
     def __init__(self, reads_1, reads_2, name= "", compressed= True, ):
@@ -57,7 +59,7 @@ class FastQContainer(object):
         return OrderedDict(sorted(pairs.items()))
 
 
-    def concat_split_pairs(self, merge_split_dir=".", concat= True,  split=1):
+    def concat_split_pairs(self, merge_split_dir=".", concat= True,  n_seq= None, sample_name=""):
         """
             - concatenates the divided sample data into one and splits into a user defined
             number of smaller compressed files.
@@ -84,28 +86,33 @@ class FastQContainer(object):
             if merge_split_dir == ".":
                 merge_split_dir = os.path.dirname(reads_1[0])
 
+            fastq_id= "%s_%s" %(sample_name, self.name)
             
             cc1 = ConcatenateCompressed(compressed_file_paths= reads_1, root_dir= merge_split_dir, 
-                    sample_name= self.name, merged_file_name= merged_name_1).merged_file_path
+                    sample_name= fastq_id, merged_file_name= merged_name_1).merged_file_path
             cc2 = ConcatenateCompressed(compressed_file_paths= reads_2, root_dir= merge_split_dir, 
-                    sample_name= self.name, merged_file_name= merged_name_2).merged_file_path
+                    sample_name= fastq_id, merged_file_name= merged_name_2).merged_file_path
                 
             self.merged_pair[0] = cc1 
             self.merged_pair[1] = cc2 
             
             self.concat= True
 
-            if split > 1:
-                self.splitter_1= FastQSplitter(file_path= self.merged_pair[0], 
-                        root_dir= merge_split_dir, sample_name= self.name, split_times= split )
-                self.splitter_2= FastQSplitter(file_path= self.merged_pair[1], 
-                        root_dir= merge_split_dir, sample_name= self.name, split_times= split)
+            if n_seq:
+                fastq_1_handle= FastQSplitter(file_path= self.merged_pair[0], 
+                        root_dir= merge_split_dir, sample_name= fastq_id, n_seq= n_seq).run()
+                fastq_2_handle= FastQSplitter(file_path= self.merged_pair[1], 
+                        root_dir= merge_split_dir, sample_name= fastq_id, n_seq= n_seq).run()
 
-                self.split= True
-                return zip(self.splitter_1.split_fastq_files, self.splitter_2.split_fastq_files )
+                return fastq_1_handle, fastq_2_handle
 
-            else:
-                return cc1, cc2
+                #pdb.set_trace()
+                
+                #self.split= True
+                #return zip(self.splitter_1.split_fastq_files, self.splitter_2.split_fastq_files )
+
+            #else:
+            #    return cc1, cc2
 
 
     @property
