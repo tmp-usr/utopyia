@@ -71,7 +71,7 @@ class FastQSplitter(object):
                     
             split_fastq.write("".join(str(seq) for seq in chunk))
             split_fastq.close()
-            yield split_fastq_path
+            yield i, split_fastq_path
 
  
 

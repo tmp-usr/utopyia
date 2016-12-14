@@ -63,6 +63,7 @@ class Aligner(object):
             command_line= "\n".join([command_line_1, command_line_2, command_line_3, command_line_4])
 
             
-            print Slurm("b2016253", resource_type= "core", n_resource = 8, run_time= "00:30:00", 
-                                job_name= "test_1", email= "", command_line= command_line)
+            _= Slurm("snic2016-1-184", resource_type= "core", n_resource = 8,
+                    run_time= "01:00:00", job_name= "test_1", 
+                    email= "kemal.sanli@scilifelab.se", command_line= command_line)
             

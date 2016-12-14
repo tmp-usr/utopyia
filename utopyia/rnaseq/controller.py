@@ -16,7 +16,7 @@ from pathos.multiprocessing import ProcessingPool as Pool
 
 import time
 
-
+import pdb
 
 
 class Controller(object):
@@ -58,24 +58,22 @@ class Controller(object):
         #for replicate in sample.replicates:
         #    #self.all_replicates[replicate] = sample
         
-        sample= self.all_replicates[replicate]
-        pair1, pair2= replicate.concat_split_pairs(merge_split_dir= self.merge_split_dir, n_seq= 10000, sample_name= sample.name)
+        #sample= self.all_replicates[replicate]
+        pair1, pair2= replicate.concat_split_pairs(merge_split_dir= self.merge_split_dir, n_seq= 5000, sample_name= replicate.name)
+        
 
-        for reads_1, reads_2 in izip(pair1, pair2):
+        sample = self.all_replicates[replicate]
+        
+        for (i, reads_1), (i, reads_2) in izip(pair1, pair2):
             
-            #### alignment
-            
-
             fastq_pair= FastQPair(reads_1, reads_2, name= replicate.name)
 
-            sample_name = self.all_replicates[replicate].name
-            
-            aln_name= "%s_%s" %(sample.name, replicate.name)
+            aln_name= "%s_%s_%d" %(sample.name, replicate.name, i) 
             self.aln_provider= self.io_provider.get_alignment_provider(aln_name)
 
-            self.aln_output_dir= self.aln_provider.__dict__[aln_name].path
+            self.aln_output_dir= self.aln_provider.root_dir
             self.sj_out=  self.aln_provider.sj_file.path
-            self.sam_out=  self.aln_provider.sam_file.path
+            self.sam_out=  self.aln_provider.bam_file.path
             self.count_out= self.aln_provider.count_file.path
 
 
@@ -91,10 +89,9 @@ class Controller(object):
 
             aln.align_fastq_pair()
 
-
     def run_parallel(self):
         p= Pool(processes= 8)
-        p.map(self.init_alignment, self.all_replicates)#self.all_replicates)
+        p.map(self.init_alignment, dict(self.all_replicates.items()[:2]))#self.all_replicates)
         
 
 
@@ -103,11 +100,10 @@ class Controller(object):
 
 
 if __name__ == "__main__":
-    print "a"
     c= Controller("mock")
-    #c.init_alignment(c.all_replicates)
+    c.init_alignment(dict(c.all_replicates.items()).keys()[0])
     #[c.init_alignment(rep) for rep in c.all_replicates]
-    c.run_parallel() 
+    #c.run_parallel() 
     
 
 

@@ -2,7 +2,7 @@ import os
 import shutil
 from collections import OrderedDict
 from operator import itemgetter
-
+from itertools import izip
 
 from concatenate_compressed import ConcatenateCompressed
 from fastq_splitter import FastQSplitter

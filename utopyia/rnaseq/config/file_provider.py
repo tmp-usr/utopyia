@@ -30,12 +30,13 @@ class TmpProvider(OutputProvider):
 
 
 class AlignmentProvider(OutputProvider):
-    def __init__(self, root_dir, sample_name):
-        files= {"sam_file": os.path.join(root_dir, sample_name, "%s.sam" %sample_name ), 
-                "sj_file": os.path.join(root_dir, sample_name, "%s.sj" %sample_name), 
-                "count_file": os.path.join(root_dir, sample_name, "%s.count" %sample_name)}
-        dirs= {
-                sample_name: os.path.join(root_dir, sample_name)
+    def __init__(self, root_dir, aln_name):
+
+        files= {"bam_file": os.path.join(root_dir, "%sAligned.sortedByCoord.out.bam" %aln_name ), 
+                "sj_file": os.path.join(root_dir, "%sSJ.out.tab" %aln_name), 
+                "count_file": os.path.join(root_dir,"%s.count" %aln_name)}
+        dirs=   {#}
+                #sample_name: os.path.join(root_dir, sample_name)
                 } 
         
         OutputProvider.__init__(self, root_dir, dirs= dirs, files= files)
@@ -60,6 +61,6 @@ class RNASeqIOProvider(object):
         self.alignment_root_dir= os.path.join(self.output_root_dir, "alignment")
 
 
-    def get_alignment_provider(self, sample_name):
-        return AlignmentProvider(self.alignment_root_dir, sample_name)
+    def get_alignment_provider(self, aln_name):
+        return AlignmentProvider(self.alignment_root_dir, aln_name)
     
