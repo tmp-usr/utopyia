@@ -13,8 +13,8 @@ class ReferenceProvider(OutputProvider):
                       gtf_file= "", species_name= "homo sapiens"):
 
         dirs= {"ref_genome_dir": os.path.join(root_dir, genome_dir)}
-        files= {"ref_fasta_file": os.path.join(root_dir, fasta_file), 
-                "ref_gtf_file": os.path.join(root_dir, gtf_file)}
+        files= {"ref_fasta_file": os.path.join(root_dir, fasta_file)}
+                #"ref_gtf_file": os.path.join(root_dir, gtf_file)}
 
         OutputProvider.__init__(self, root_dir, dirs, files)
         self.species_name= species_name
@@ -29,19 +29,34 @@ class TmpProvider(OutputProvider):
         OutputProvider.__init__(self, root_dir, tmp_dirs)
 
 
-class AlignmentProvider(OutputProvider):
-    def __init__(self, root_dir, aln_name):
 
-        files= {"bam_file": os.path.join(root_dir, "%sAligned.sortedByCoord.out.bam" %aln_name ), 
-                "sj_file": os.path.join(root_dir, "%sSJ.out.tab" %aln_name), 
-                "count_file": os.path.join(root_dir,"%s.count" %aln_name)}
-        dirs=   {#}
-                #sample_name: os.path.join(root_dir, sample_name)
+
+
+class AlignmentProvider(OutputProvider):
+    """
+        amend the file paths that replicate orders are also clarified.
+
+
+    """
+    
+    def __init__(self, root_dir, aln_name):
+        
+        print "######### %s " %aln_name
+        files= {"bam_file": os.path.join(root_dir, aln_name, "%sAligned.sortedByCoord.out.bam" %aln_name ), 
+                "sj_file": os.path.join(root_dir, aln_name, "%sSJ.out.tab" %aln_name), 
+                "count_file": os.path.join(root_dir, aln_name, "%s.count" %aln_name)}
+        dirs=   {
+                 aln_name: os.path.join(root_dir, aln_name)
                 } 
         
         OutputProvider.__init__(self, root_dir, dirs= dirs, files= files)
 
-        
+
+
+
+
+
+
 
 class RNASeqIOProvider(object):
     
@@ -64,3 +79,6 @@ class RNASeqIOProvider(object):
     def get_alignment_provider(self, aln_name):
         return AlignmentProvider(self.alignment_root_dir, aln_name)
     
+    def refresh_tmp(self):
+        self.tmp_provider = TmpProvider(root_dir= tmp_root_dir)
+

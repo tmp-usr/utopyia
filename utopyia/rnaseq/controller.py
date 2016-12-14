@@ -35,8 +35,8 @@ class Controller(object):
         self.genome_dir1= self.io_provider.ref_provider.ref_genome_dir.path
         self.genome_dir2= self.io_provider.tmp_provider.reindexed_genome_dir.path
         self.genome_fasta_path= self.io_provider.ref_provider.ref_fasta_file.path
-        self.gtf_file= self.io_provider.ref_provider.ref_gtf_file.path
-
+        #self.gtf_file= self.io_provider.ref_provider.ref_gtf_file.path
+        self.gtf_file= ""
 
         ####################
         self.project= Project(project_name, self.input_root_dir, replication_level = replication_level)
@@ -59,6 +59,7 @@ class Controller(object):
         #    #self.all_replicates[replicate] = sample
         
         #sample= self.all_replicates[replicate]
+        self.io_provider.refresh_tmp()
         pair1, pair2= replicate.concat_split_pairs(merge_split_dir= self.merge_split_dir, n_seq= 5000, sample_name= replicate.name)
         
 
@@ -90,14 +91,9 @@ class Controller(object):
             aln.align_fastq_pair()
 
     def run_parallel(self):
-        p= Pool(processes= 8)
-        p.map(self.init_alignment, dict(self.all_replicates.items()[:2]))#self.all_replicates)
+        p= Pool(processes= 2)
+        p.map(self.init_alignmen, dict(self.all_replicates.items()[:2]))#self.all_replicates)
         
-
-
-
-
-
 
 if __name__ == "__main__":
     c= Controller("mock")
