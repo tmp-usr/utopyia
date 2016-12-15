@@ -44,15 +44,13 @@ class AlignmentProvider(OutputProvider):
         print "######### %s " %aln_name
         files= {"bam_file": os.path.join(root_dir, aln_name, "%sAligned.sortedByCoord.out.bam" %aln_name ), 
                 "sj_file": os.path.join(root_dir, aln_name, "%sSJ.out.tab" %aln_name), 
-                "count_file": os.path.join(root_dir, aln_name, "%s.count" %aln_name)}
+                "count_file": os.path.join(root_dir, aln_name, "%s.count" %aln_name),
+                "prefix": os.path.join(root_dir, aln_name, "%s" % aln_name)}
+
         dirs=   {
                  aln_name: os.path.join(root_dir, aln_name)
                 } 
-        
         OutputProvider.__init__(self, root_dir, dirs= dirs, files= files)
-
-
-
 
 
 
@@ -81,4 +79,8 @@ class RNASeqIOProvider(object):
     
     def refresh_tmp(self):
         self.tmp_provider = TmpProvider(root_dir= tmp_root_dir)
+
+
+
+
 

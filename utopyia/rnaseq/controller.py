@@ -71,7 +71,8 @@ class Controller(object):
             aln_name= "%s_%s_%d" %(sample.name, replicate.name, i) 
             self.aln_provider= self.io_provider.get_alignment_provider(aln_name)
 
-            self.aln_output_dir= self.aln_provider.root_dir
+            self.aln_output_prefix= self.aln_provider.prefix.path
+            
             self.sj_out=  self.aln_provider.sj_file.path
             self.sam_out=  self.aln_provider.bam_file.path
             self.count_out= self.aln_provider.count_file.path
@@ -85,7 +86,7 @@ class Controller(object):
                 count_out= self.count_out, 
                 tmp_output_dir_1= self.tmp_output_dir_1, 
                 tmp_output_dir_2= self.tmp_output_dir_2,
-                output_dir= self.aln_output_dir)
+                output_prefix= self.aln_output_prefix)
 
             aln.align_fastq_pair()
 

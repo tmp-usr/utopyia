@@ -1,6 +1,6 @@
-def star_pass_1(genome_dir1, fastq_pair, tmp_output_dir_1, output_dir):
+def star_pass_1(genome_dir1, fastq_pair, tmp_output_dir_1, output_prefix):
     command_line= """
-module load bioinfo-tools star/2.4.2a
+#module load bioinfo-tools star/2.4.2a
 STAR \
 --readFilesIn %s %s \
 --genomeDir %s \
@@ -20,7 +20,7 @@ STAR \
 --outSAMstrandField intronMotif \
 --outSAMtype None \
 --outFileNamePrefix %s
-""" % (fastq_pair.reads_1, fastq_pair.reads_2, genome_dir1, tmp_output_dir_1, output_dir)
+""" % (fastq_pair.reads_1, fastq_pair.reads_2, genome_dir1, tmp_output_dir_1, output_prefix)
     return command_line
 
 def star_pass_2(genome_dir2, genome_fasta_path, sj_out):
@@ -66,7 +66,7 @@ STAR \
 
 def generate_counts(bam_out, gtf_file, count_out):
     command_line= """
-module load samtools/1.1
+#module load samtools/1.1
 samtools view -F 4 %s | htseq-count -m intersection-nonempty -i gene_id -r pos -s no -t exon - %s > %s 
 """ % (bam_out, gtf_file, count_out)
     return command_line

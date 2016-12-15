@@ -49,14 +49,14 @@ class Aligner(object):
         if "count_out" in kwargs:
             self.count_out= kwargs["count_out"]
 
-        if "output_dir" in kwargs:
-            self.output_dir = kwargs["output_dir"]
+        if "output_prefix" in kwargs:
+            self.output_prefix = kwargs["output_prefix"]
 
     def align_fastq_pair(self, aligner= "star"):
         if aligner == "star":
-            command_line_1 = star_pass_1(self.genome_dir1, self.fastq_pair, self.tmp_output_dir_1, self.output_dir)
+            command_line_1 = star_pass_1(self.genome_dir1, self.fastq_pair, self.tmp_output_dir_1, self.output_prefix)
             command_line_2 = star_pass_2(self.genome_dir2, self.genome_fasta_path, self.sj_out)
-            command_line_3 = star_pass_3(self.genome_dir2, self.fastq_pair, self.tmp_output_dir_2, self.output_dir)
+            command_line_3 = star_pass_3(self.genome_dir2, self.fastq_pair, self.tmp_output_dir_2, self.output_prefix)
             command_line_4 = generate_counts(self.sam_out, self.gtf_file, self.count_out)
 
     
