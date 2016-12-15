@@ -3,7 +3,6 @@ import shutil
 from itertools import izip
 
 
-
 from aligner import Aligner
 from project.project import Project
 from config.file_provider import RNASeqIOProvider
