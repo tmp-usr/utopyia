@@ -26,13 +26,12 @@ class Controller(object):
         self.input_root_dir= self.io_provider.input_root_dir
 
         #### tmp
-        self.tmp_output_dir_1=  self.io_provider.tmp_provider.tmp_output_dir_1.path
-        self.tmp_output_dir_2=   self.io_provider.tmp_provider.tmp_output_dir_2.path
+        #self.tmp_output_dir_1=  self.io_provider.tmp_provider.tmp_output_dir_1.path
+        #self.tmp_output_dir_2=   self.io_provider.tmp_provider.tmp_output_dir_2.path
         self.merge_split_dir= self.io_provider.tmp_provider.merge_split_dir.path
 
         #### reference
         self.genome_dir1= self.io_provider.ref_provider.ref_genome_dir.path
-        self.genome_dir2= self.io_provider.tmp_provider.reindexed_genome_dir.path
         self.genome_fasta_path= self.io_provider.ref_provider.ref_fasta_file.path
         #self.gtf_file= self.io_provider.ref_provider.ref_gtf_file.path
         self.gtf_file= ""
@@ -76,8 +75,15 @@ class Controller(object):
             self.sj_out=  self.aln_provider.sj_file.path
             self.sam_out=  self.aln_provider.bam_file.path
             self.count_out= self.aln_provider.count_file.path
+            
+            self.aln_tmp_provider= self.io_provider.get_alignment_tmp_provider(aln_name)
+            
+            self.genome_dir2= self.aln_tmp_provider.reindexed_genome_dir.path
+            self.tmp_output_dir1= self.aln_tmp_provider.tmp_output_dir1.path
+            self.tmp_output_dir2= self.aln_tmp_provider.tmp_output_dir2.path
 
-
+            
+            
             aln= Aligner(
                 fastq_pair= fastq_pair,
                 genome_dir1= self.genome_dir1, genome_dir2= self.genome_dir2, 

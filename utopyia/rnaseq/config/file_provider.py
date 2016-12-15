@@ -22,13 +22,28 @@ class ReferenceProvider(OutputProvider):
 
 class TmpProvider(OutputProvider):
     def __init__(self, root_dir):
-        tmp_dirs= ["merge_split_dir", "decompression_dir", "reindexed_genome_dir",
-                   "tmp_output_dir_1", "tmp_output_dir_2"]
+        tmp_dirs= ["merge_split_dir", "decompression_dir"]
 
         tmp_dirs= {dir_name: os.path.join(root_dir, dir_name) for dir_name in tmp_dirs}
         OutputProvider.__init__(self, root_dir, tmp_dirs)
 
 
+    def get_reindexed_genome_dir(self, aln_name):
+        return os.path.join(self.reindexed_genome_dir, aln_name) 
+
+
+
+class AlignmentTmpProvider(OutputProvider):
+    def __init__(self, tmp_dir, aln_name):
+        self.root_dir = os.path.join(tmp_dir, aln_name)
+        
+        dirs= {
+                "reindexed_genome_dir": os.path.join(self.root_dir, "reindexed_genome_dir"),
+                "tmp_output_dir1": os.path.join(self.root_dir, "tmp_output_dir1"),
+                "tmp_output_dir2": os.path.join(self.root_dir, "tmp_output_dir2")
+                }
+
+        OutputProvider.__init__(self, root_dir, dirs= dirs}
 
 
 
@@ -77,6 +92,9 @@ class RNASeqIOProvider(object):
     def get_alignment_provider(self, aln_name):
         return AlignmentProvider(self.alignment_root_dir, aln_name)
     
+    def get_alignment_tmp_provider(self, aln_name):
+        return AlignmentTmpProvider(self, tmp_root_dir, aln_name)
+
     def refresh_tmp(self):
         self.tmp_provider = TmpProvider(root_dir= tmp_root_dir)
 
