@@ -1,0 +1,342 @@
+STAR version=STAR_2.4.2a
+STAR compilation time,server,dir=Thu Nov 19 11:02:30 CET 2015 tintin1.uppmax.uu.se:/sw/apps/bioinfo/star/2.4.2a/src/source
+##### DEFAULT parameters:
+versionSTAR                       20201
+versionGenome                     20101   20200   
+parametersFiles                   -   
+sysShell                          -
+runMode                           alignReads
+runThreadN                        1
+runDirPerm                        User_RWX
+genomeDir                         ./GenomeDir/
+genomeLoad                        NoSharedMemory
+genomeFastaFiles                  -   
+genomeSAindexNbases               14
+genomeChrBinNbits                 18
+genomeSAsparseD                   1
+readFilesIn                       Read1   Read2   
+readFilesCommand                  -   
+readMatesLengthsIn                NotEqual
+readMapNumber                     18446744073709551615
+inputBAMfile                      -
+bamRemoveDuplicatesType           -
+bamRemoveDuplicatesMate2basesN    0
+limitGenomeGenerateRAM            31000000000
+limitIObufferSize                 150000000
+limitOutSAMoneReadBytes           100000
+limitOutSJcollapsed               1000000
+limitOutSJoneRead                 1000
+limitBAMsortRAM                   0
+limitSjdbInsertNsj                1000000
+outStd                            Log
+outReadsUnmapped                  None
+outQSconversionAdd                0
+outSAMtype                        SAM   
+outSAMmode                        Full
+outSAMstrandField                 None
+outSAMattributes                  Standard   
+outSAMunmapped                    None
+outSAMorder                       Paired
+outSAMprimaryFlag                 OneBestScore
+outSAMreadID                      Standard
+outSAMmapqUnique                  255
+outSAMflagOR                      0
+outSAMflagAND                     65535
+outSAMattrRGline                  -   
+outSAMheaderHD                    -   
+outSAMheaderPG                    -   
+outSAMheaderCommentFile           -
+outBAMcompression                 1
+outBAMsortingThreadN              0
+outSJfilterReads                  All
+outSJfilterCountUniqueMin         3   1   1   1   
+outSJfilterCountTotalMin          3   1   1   1   
+outSJfilterOverhangMin            30   12   12   12   
+outSJfilterDistToOtherSJmin       10   0   5   10   
+outSJfilterIntronMaxVsReadN       50000   100000   200000   
+outWigType                        None   
+outWigStrand                      Stranded   
+outWigReferencesPrefix            -
+outWigNorm                        RPM   
+outFilterType                     Normal
+outFilterMultimapNmax             10
+outFilterMultimapScoreRange       1
+outFilterScoreMin                 0
+outFilterScoreMinOverLread        0.66
+outFilterMatchNmin                0
+outFilterMatchNminOverLread       0.66
+outFilterMismatchNmax             10
+outFilterMismatchNoverLmax        0.3
+outFilterMismatchNoverReadLmax    1
+outFilterIntronMotifs             None
+clip5pNbases                      0   
+clip3pNbases                      0   
+clip3pAfterAdapterNbases          0   
+clip3pAdapterSeq                  -   
+clip3pAdapterMMp                  0.1   
+winBinNbits                       16
+winAnchorDistNbins                9
+winFlankNbins                     4
+winAnchorMultimapNmax             50
+scoreGap                          0
+scoreGapNoncan                    -8
+scoreGapGCAG                      -4
+scoreGapATAC                      -8
+scoreStitchSJshift                1
+scoreGenomicLengthLog2scale       -0.25
+scoreDelBase                      -2
+scoreDelOpen                      -2
+scoreInsOpen                      -2
+scoreInsBase                      -2
+seedSearchLmax                    0
+seedSearchStartLmax               50
+seedSearchStartLmaxOverLread      1
+seedPerReadNmax                   1000
+seedPerWindowNmax                 50
+seedNoneLociPerWindow             10
+seedMultimapNmax                  10000
+alignIntronMin                    21
+alignIntronMax                    0
+alignMatesGapMax                  0
+alignTranscriptsPerReadNmax       10000
+alignSJoverhangMin                5
+alignSJDBoverhangMin              3
+alignSplicedMateMapLmin           0
+alignSplicedMateMapLminOverLmate    0.66
+alignWindowsPerReadNmax           10000
+alignTranscriptsPerWindowNmax     100
+alignEndsType                     Local
+alignSoftClipAtReferenceEnds      Yes
+chimSegmentMin                    0
+chimScoreMin                      0
+chimScoreDropMax                  20
+chimScoreSeparation               10
+chimScoreJunctionNonGTAG          -1
+chimJunctionOverhangMin           20
+chimOutType                       SeparateSAMold
+sjdbFileChrStartEnd               -   
+sjdbGTFfile                       -
+sjdbGTFchrPrefix                  -
+sjdbGTFfeatureExon                exon
+sjdbGTFtagExonParentTranscript    transcript_id
+sjdbGTFtagExonParentGene          gene_id
+sjdbOverhang                      100
+sjdbScore                         2
+sjdbInsertSave                    Basic
+quantMode                         -   
+quantTranscriptomeBAMcompression    1
+quantTranscriptomeBan             IndelSoftclipSingleend
+twopass1readsN                    18446744073709551615
+twopassMode                       None
+##### Command Line:
+STAR --genomeDir /home/adilm/projects/reference_genomes/human/genomeDir --readFilesIn /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_1_sp/reads_1_1.fastq /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_2_sp/reads_2_1.fastq --runThreadN 16 --outFilterMultimapScoreRange 1 --outFilterMultimapNmax 20 --outFilterMismatchNmax 10 --alignIntronMax 500000 --alignMatesGapMax 1000000 --sjdbScore 2 --alignSJDBoverhangMin 1 --genomeLoad NoSharedMemory --outFilterMatchNminOverLread 0.33 --outFilterScoreMinOverLread 0.33 --sjdbOverhang 100 --outSAMstrandField intronMotif --outSAMtype None --outSAMmode None --outTmpDir ./myTmpDir --outFileNamePrefix ./myOutputs/mySample
+##### Initial USER parameters from Command Line:
+outFileNamePrefix                 ./myOutputs/mySample
+outTmpDir                         ./myTmpDir
+###### All USER parameters from Command Line:
+genomeDir                     /home/adilm/projects/reference_genomes/human/genomeDir     ~RE-DEFINED
+readFilesIn                   /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_1_sp/reads_1_1.fastq   /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_2_sp/reads_2_1.fastq        ~RE-DEFINED
+runThreadN                    16     ~RE-DEFINED
+outFilterMultimapScoreRange   1     ~RE-DEFINED
+outFilterMultimapNmax         20     ~RE-DEFINED
+outFilterMismatchNmax         10     ~RE-DEFINED
+alignIntronMax                500000     ~RE-DEFINED
+alignMatesGapMax              1000000     ~RE-DEFINED
+sjdbScore                     2     ~RE-DEFINED
+alignSJDBoverhangMin          1     ~RE-DEFINED
+genomeLoad                    NoSharedMemory     ~RE-DEFINED
+outFilterMatchNminOverLread   0.33     ~RE-DEFINED
+outFilterScoreMinOverLread    0.33     ~RE-DEFINED
+sjdbOverhang                  100     ~RE-DEFINED
+outSAMstrandField             intronMotif     ~RE-DEFINED
+outSAMtype                    None        ~RE-DEFINED
+outSAMmode                    None     ~RE-DEFINED
+outTmpDir                     ./myTmpDir     ~RE-DEFINED
+outFileNamePrefix             ./myOutputs/mySample     ~RE-DEFINED
+##### Finished reading parameters from all sources
+
+##### Final user re-defined parameters-----------------:
+runThreadN                        16
+genomeDir                         /home/adilm/projects/reference_genomes/human/genomeDir
+genomeLoad                        NoSharedMemory
+readFilesIn                       /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_1_sp/reads_1_1.fastq   /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_2_sp/reads_2_1.fastq   
+outFileNamePrefix                 ./myOutputs/mySample
+outTmpDir                         ./myTmpDir
+outSAMtype                        None   
+outSAMmode                        None
+outSAMstrandField                 intronMotif
+outFilterMultimapNmax             20
+outFilterMultimapScoreRange       1
+outFilterScoreMinOverLread        0.33
+outFilterMatchNminOverLread       0.33
+outFilterMismatchNmax             10
+alignIntronMax                    500000
+alignMatesGapMax                  1000000
+alignSJDBoverhangMin              1
+sjdbOverhang                      100
+sjdbScore                         2
+
+-------------------------------
+##### Final effective command line:
+STAR   --runThreadN 16   --genomeDir /home/adilm/projects/reference_genomes/human/genomeDir   --genomeLoad NoSharedMemory   --readFilesIn /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_1_sp/reads_1_1.fastq   /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_2_sp/reads_2_1.fastq      --outFileNamePrefix ./myOutputs/mySample   --outTmpDir ./myTmpDir   --outSAMtype None      --outSAMmode None   --outSAMstrandField intronMotif   --outFilterMultimapNmax 20   --outFilterMultimapScoreRange 1   --outFilterScoreMinOverLread 0.33   --outFilterMatchNminOverLread 0.33   --outFilterMismatchNmax 10   --alignIntronMax 500000   --alignMatesGapMax 1000000   --alignSJDBoverhangMin 1   --sjdbOverhang 100   --sjdbScore 2
+
+##### Final parameters after user input--------------------------------:
+versionSTAR                       20201
+versionGenome                     20101   20200   
+parametersFiles                   -   
+sysShell                          -
+runMode                           alignReads
+runThreadN                        16
+runDirPerm                        User_RWX
+genomeDir                         /home/adilm/projects/reference_genomes/human/genomeDir
+genomeLoad                        NoSharedMemory
+genomeFastaFiles                  -   
+genomeSAindexNbases               14
+genomeChrBinNbits                 18
+genomeSAsparseD                   1
+readFilesIn                       /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_1_sp/reads_1_1.fastq   /home/adilm/projects/mock/tmp/merge_split_dir/sample_1/split/reads_2_sp/reads_2_1.fastq   
+readFilesCommand                  -   
+readMatesLengthsIn                NotEqual
+readMapNumber                     18446744073709551615
+inputBAMfile                      -
+bamRemoveDuplicatesType           -
+bamRemoveDuplicatesMate2basesN    0
+limitGenomeGenerateRAM            31000000000
+limitIObufferSize                 150000000
+limitOutSAMoneReadBytes           100000
+limitOutSJcollapsed               1000000
+limitOutSJoneRead                 1000
+limitBAMsortRAM                   0
+limitSjdbInsertNsj                1000000
+outFileNamePrefix                 ./myOutputs/mySample
+outTmpDir                         ./myTmpDir
+outStd                            Log
+outReadsUnmapped                  None
+outQSconversionAdd                0
+outSAMtype                        None   
+outSAMmode                        None
+outSAMstrandField                 intronMotif
+outSAMattributes                  Standard   
+outSAMunmapped                    None
+outSAMorder                       Paired
+outSAMprimaryFlag                 OneBestScore
+outSAMreadID                      Standard
+outSAMmapqUnique                  255
+outSAMflagOR                      0
+outSAMflagAND                     65535
+outSAMattrRGline                  -   
+outSAMheaderHD                    -   
+outSAMheaderPG                    -   
+outSAMheaderCommentFile           -
+outBAMcompression                 1
+outBAMsortingThreadN              0
+outSJfilterReads                  All
+outSJfilterCountUniqueMin         3   1   1   1   
+outSJfilterCountTotalMin          3   1   1   1   
+outSJfilterOverhangMin            30   12   12   12   
+outSJfilterDistToOtherSJmin       10   0   5   10   
+outSJfilterIntronMaxVsReadN       50000   100000   200000   
+outWigType                        None   
+outWigStrand                      Stranded   
+outWigReferencesPrefix            -
+outWigNorm                        RPM   
+outFilterType                     Normal
+outFilterMultimapNmax             20
+outFilterMultimapScoreRange       1
+outFilterScoreMin                 0
+outFilterScoreMinOverLread        0.33
+outFilterMatchNmin                0
+outFilterMatchNminOverLread       0.33
+outFilterMismatchNmax             10
+outFilterMismatchNoverLmax        0.3
+outFilterMismatchNoverReadLmax    1
+outFilterIntronMotifs             None
+clip5pNbases                      0   
+clip3pNbases                      0   
+clip3pAfterAdapterNbases          0   
+clip3pAdapterSeq                  -   
+clip3pAdapterMMp                  0.1   
+winBinNbits                       16
+winAnchorDistNbins                9
+winFlankNbins                     4
+winAnchorMultimapNmax             50
+scoreGap                          0
+scoreGapNoncan                    -8
+scoreGapGCAG                      -4
+scoreGapATAC                      -8
+scoreStitchSJshift                1
+scoreGenomicLengthLog2scale       -0.25
+scoreDelBase                      -2
+scoreDelOpen                      -2
+scoreInsOpen                      -2
+scoreInsBase                      -2
+seedSearchLmax                    0
+seedSearchStartLmax               50
+seedSearchStartLmaxOverLread      1
+seedPerReadNmax                   1000
+seedPerWindowNmax                 50
+seedNoneLociPerWindow             10
+seedMultimapNmax                  10000
+alignIntronMin                    21
+alignIntronMax                    500000
+alignMatesGapMax                  1000000
+alignTranscriptsPerReadNmax       10000
+alignSJoverhangMin                5
+alignSJDBoverhangMin              1
+alignSplicedMateMapLmin           0
+alignSplicedMateMapLminOverLmate    0.66
+alignWindowsPerReadNmax           10000
+alignTranscriptsPerWindowNmax     100
+alignEndsType                     Local
+alignSoftClipAtReferenceEnds      Yes
+chimSegmentMin                    0
+chimScoreMin                      0
+chimScoreDropMax                  20
+chimScoreSeparation               10
+chimScoreJunctionNonGTAG          -1
+chimJunctionOverhangMin           20
+chimOutType                       SeparateSAMold
+sjdbFileChrStartEnd               -   
+sjdbGTFfile                       -
+sjdbGTFchrPrefix                  -
+sjdbGTFfeatureExon                exon
+sjdbGTFtagExonParentTranscript    transcript_id
+sjdbGTFtagExonParentGene          gene_id
+sjdbOverhang                      100
+sjdbScore                         2
+sjdbInsertSave                    Basic
+quantMode                         -   
+quantTranscriptomeBAMcompression    1
+quantTranscriptomeBan             IndelSoftclipSingleend
+twopass1readsN                    18446744073709551615
+twopassMode                       None
+----------------------------------------
+
+WARNING --outSAMstrandField=intronMotif, therefore STAR will output XS attribute
+Finished loading and checking parameters
+Reading genome generation parameters:
+versionGenome                 20201        ~RE-DEFINED
+genomeFastaFiles              /home/ubuntu/SCRATCH/grch38_latest/GRCh38.d1.vd1.fa        ~RE-DEFINED
+genomeSAindexNbases           14     ~RE-DEFINED
+genomeChrBinNbits             18     ~RE-DEFINED
+genomeSAsparseD               1     ~RE-DEFINED
+sjdbOverhang                  100     ~RE-DEFINED
+sjdbFileChrStartEnd           -        ~RE-DEFINED
+sjdbGTFfile                   ../grch38_genome/gencode.v22.annotation.gtf     ~RE-DEFINED
+sjdbGTFchrPrefix              -     ~RE-DEFINED
+sjdbGTFfeatureExon            exon     ~RE-DEFINED
+sjdbGTFtagExonParentTranscripttranscript_id     ~RE-DEFINED
+Genome version is compatible with current STAR version
+Started loading the genome: Sun Dec 18 18:40:46 2016
+
+checking Genome sizefile size: 3885865849 bytes; state: good=1 eof=0 fail=0 bad=0
+checking SA sizefile size: 24848724673 bytes; state: good=1 eof=0 fail=0 bad=0
+checking /SAindex sizefile size: 1565873616 bytes; state: good=1 eof=0 fail=0 bad=0
+Read from SAindex: genomeSAindexNbases=14  nSAi=357913940
+nGenome=3885865849;  nSAbyte=24848724673
+GstrandBit=32   SA number of indices=6023933254
+Shared memory is not used for genomes. Allocated a private copy of the genome.
+Genome file size: 3885865849 bytes; state: good=1 eof=0 fail=0 bad=0
+Loading Genome ... done! state: good=1 eof=0 fail=0 bad=0; loaded 3885865849 bytes
+SA file size: 24848724676 bytes; state: good=1 eof=0 fail=0 bad=0
+Loading SA ... 
