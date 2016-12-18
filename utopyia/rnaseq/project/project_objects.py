@@ -1,4 +1,10 @@
-from fastq_container import FastQContainer
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.abspath("."),'..'))
+
+from fastq.container import FastQContainer
+
 
 class Sample(FastQContainer):
     

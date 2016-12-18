@@ -3,8 +3,6 @@ import os
 
 from project_objects import Sample, Replicate, Lane
 
-import pdb
-
 class Project(object):
     """
         replication_level= sample | replicate | lane
@@ -48,9 +46,4 @@ class Project(object):
                     s.replicates.append(r)
                 self.samples.append(s)
         
-
-    def concatenate_replicates(self):
-        assert self.replication_level != "lane", "Current replication level is not recommended for concatenation!"
-
-
 

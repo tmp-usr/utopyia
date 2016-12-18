@@ -32,5 +32,5 @@ s_ref_gtf_file= "gencode.v22.annotation.gtf"
 #tmp_root_dir= os.path.join(project_root_dir, "tmp")
 
 # server
-#tmp_root_dir=  os.environ["SNIC_TMP"]
-tmp_root_dir= os.path.join(project_root_dir, "tmp") 
+tmp_root_dir=  os.environ["SNIC_TMP"]
+#tmp_root_dir= os.path.join(project_root_dir, "tmp") 
