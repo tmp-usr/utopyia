@@ -1,5 +1,9 @@
 import os
 
+
+
+compression_method= "bzip"
+
 #local
 project_root_dir= "/Users/kemal/Desktop/postdoc/projects/mock_low_carb"
 

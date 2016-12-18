@@ -11,15 +11,18 @@ from fastq.parser import FastQParser
 from multiprocessing import Pool
 
 class FastQSplitter(object):
-    def __init__(self, file_path, root_dir, sample_name, compressed= True, n_seq= 1000):
+    def __init__(self, file_path, root_dir, sample_name, 
+                compressed= True, n_seq= 1000, compression_method= "gzip"):
         
         self.file_path= file_path
-        split_basename= "%s_sp" % os.path.basename(file_path).replace(".fastq.gz","")
+        split_basename= "%s_sp" % 
+            os.path.basename(file_path).replace(".fastq%s" %compression_method, "")
         self.split_dir= os.path.join(root_dir, sample_name, "split", split_basename)
 
         self.split_prefix= os.path.basename(self.file_path).replace(".fastq.gz","")
         self.split_fastq_files= []
         self.compressed= compressed
+        self.compression_method= compression_method
         self.n_seq= n_seq
 
         self.create_split_dir()
@@ -53,10 +56,14 @@ class FastQSplitter(object):
         #n_line_per_file= n_lines / 4 / self.split_times 
 
         ### count the total lines in a compressed file
-        handle= gzip.open(self.file_path, "rb")
+        if self.compression_method == "gzip":
+            handle= gzip.open(self.file_path, "rb")
+        
+        elif self.compression_method == "bzip":
+            handle= BZ2File(self.file_path, "rb")
+        
         seq_handle= FastQParser(handle).fastq_sequences
        
-
         br= BatchReader(self.n_seq ,seq_handle)
     
         for i, chunk in enumerate(br, 1):

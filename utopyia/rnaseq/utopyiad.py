@@ -65,7 +65,7 @@ class Utopyia(object):
         if merge_split_dir == "":
             merge_split_dir= self.merge_split_dir
 
-        fq_controller= FastQController(fastq_container, merge_split_dir= merge_split_dir, sample_name= self.sample_name, max_n_seq= max_n_seq)
+        fq_controller= FastQController(fastq_container, merge_split_dir= merge_split_dir, sample_name= self.sample_name, max_n_seq= max_n_seq, compression_method= compression_method)
         
 
         if concat == True:

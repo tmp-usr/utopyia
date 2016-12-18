@@ -15,11 +15,13 @@ import pdb
 
 class FastQController(object):
     
-    def __init__(self, container, fname_column_separator="_", fname_read_index=-1, fname_order_index=0, fname_extension=".fastq.gz", max_n_seq= 5000, merge_split_dir="", sample_name= ""):
+    def __init__(self, container, fname_column_separator="_", fname_read_index=-1, fname_order_index=0, fname_extension=".fastq.gz", compression_method="gzip", max_n_seq= 5000, merge_split_dir="", sample_name= ""):
         
         self.max_n_seq= max_n_seq
         self.container= container
-            
+        
+        self.compression_method= compression_method
+    
         self.merge_split_dir= merge_split_dir
 
         self.sample_name= sample_name
@@ -79,11 +81,11 @@ class FastQController(object):
         for k,v in self.pairs.iteritems():
             fastq_1_handle= FastQSplitter(file_path= v[0], 
                 root_dir= self.merge_split_dir, sample_name= self.sample_name, 
-                n_seq= self.max_n_seq).run()
+                n_seq= self.max_n_seq, compression_method= self.compression_method).run()
         
             fastq_2_handle= FastQSplitter(file_path= v[1], 
                 root_dir= self.merge_split_dir, sample_name= self.sample_name, 
-                n_seq= self.max_n_seq).run()
+                n_seq= self.max_n_seq, compression_method= self.compression_method).run()
            
             yield izip(map(itemgetter(1),fastq_1_handle), map(itemgetter(1), fastq_2_handle))
             
