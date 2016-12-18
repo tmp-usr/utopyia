@@ -25,8 +25,8 @@ class FastQController(object):
         self.sample_name= sample_name
 
         self.learner= FastQFileLearner(fname_column_separator, fname_read_index, fname_order_index, fname_extension)
-        self.pairs= OrderedDict()   
-
+       
+        self.extract_pairs()
 
     def extract_pairs(self):
         files= self.container.fastq_files
@@ -44,11 +44,9 @@ class FastQController(object):
 
 
     def concat(self):
-        
-        ordered_fastq_pairs= self.extract_pairs()
-
-        reads_1 = map(itemgetter(0), ordered_fastq_pairs.values())
-        reads_2 = map(itemgetter(1), ordered_fastq_pairs.values())
+    
+        reads_1 = map(itemgetter(0), pairs.values())
+        reads_2 = map(itemgetter(1), pairs.values())
 
         f_cols_1= os.path.basename(reads_1[0]).split(self.learner.fname_column_separator)
         f_cols_1.pop(self.learner.fname_order_index)
@@ -77,15 +75,24 @@ class FastQController(object):
 
 
     def yield_split_pairs(self):        
-        fastq_1_handle= FastQSplitter(file_path= self.pairs.values()[0][0], 
+        
+        for k,v in self.pairs.iteritems():
+            fastq_1_handle= FastQSplitter(file_path= v[0], 
                 root_dir= self.merge_split_dir, sample_name= self.sample_name, 
                 n_seq= self.max_n_seq).run()
         
-        fastq_2_handle= FastQSplitter(file_path= self.pairs.values()[0][1], 
+            fastq_2_handle= FastQSplitter(file_path= v[1], 
                 root_dir= self.merge_split_dir, sample_name= self.sample_name, 
                 n_seq= self.max_n_seq).run()
+           
+            yield izip(map(itemgetter(1),fastq_1_handle), map(itemgetter(1), fastq_2_handle))
+            
+            #yield fastq_1_handle, fastq_2_handle
 
-        return fastq_1_handle, fastq_2_handle
+
+
+
+
 
 
 

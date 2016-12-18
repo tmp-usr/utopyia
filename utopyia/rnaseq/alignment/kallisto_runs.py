@@ -1,22 +1,16 @@
-def star_pass_1(genome_dir1, fastq_pair, tmp_output_dir_1, output_prefix):
+def kallisto_run(genome_index, output_dir, fastq_pair):
+    """
+kallisto inputs differ from star. kallisto requires a pregenerated index file as input.
+@kallisto_genome_index
+@fastq_pair
+@sample_id
+@output_dir
+@
+    """    
     command_line= """
-indFile=/proj/b2016253/genome/hg19.kallisto.GRCh38.index
-
-sampleID=1 
-
-pair1=$1
-pair2=$2
-num=$3
-outDir=$4
-
-$num=$sampleID
-
-
 #loading kallisto library
-#module load kallisto/0.43.0
+module load kallisto/0.43.0
 
-#preprocessing raw file by kallisto
-echo "kallisto preprocessing"
-kallisto quant -i $indFile -o $outDir -t 16 $pair1 $pair2
-echo "preprocessed"
+kallisto quant -i %s -o %s -t 16 %s %s
 """
+%(genome_index, output_dir, fastq_pair.reads_1, fastq_pair.reads_2)

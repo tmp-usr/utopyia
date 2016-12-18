@@ -15,10 +15,11 @@ import pdb
 
 class ReferenceProvider(OutputProvider): 
     def __init__(self, root_dir, genome_dir= "genome_dir", fasta_file= "",
-                      gtf_file= "", species_name= "homo sapiens"):
+                      gtf_file= "", genome_index= "", species_name= "homo sapiens"):
 
         dirs= {"ref_genome_dir": os.path.join(root_dir, genome_dir)}
-        files= {"ref_fasta_file": os.path.join(root_dir, fasta_file),
+        files= {"genome_index": os.path.join(root_dir, genome_index),
+                "ref_fasta_file": os.path.join(root_dir, fasta_file),
                 "ref_gtf_file": os.path.join(root_dir, gtf_file)}
 
         OutputProvider.__init__(self, root_dir, dirs, files)
@@ -86,6 +87,7 @@ class RNASeqIOProvider(object):
 
         #### refering to the symbolic links of the original reference files
         self.ref_provider= ReferenceProvider(root_dir= s_ref_root, 
+                genome_index= k_ref_genome_index, 
                 genome_dir= s_ref_genome_dir,
                 fasta_file= s_ref_fasta_file ,  
                 gtf_file= s_ref_gtf_file)

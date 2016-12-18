@@ -20,7 +20,10 @@ class Aligner(object):
 
 
     def init_attr(self, **kwargs):
-        
+       
+        if "genome_index" in kwargs:
+            self.genome_index = kwargs["genome_index"]
+
         if "genome_dir1" in kwargs:
             self.genome_dir1= kwargs["genome_dir1"] 
 
@@ -51,7 +54,10 @@ class Aligner(object):
 
         if "output_prefix" in kwargs:
             self.output_prefix = kwargs["output_prefix"]
-
+            
+        if "output_dir" in kwargs:
+            self.output_dir = kwargs["output_dir"]
+            
     def align_fastq_pair(self, aligner= "star"):
         if aligner == "star":
             command_line_1 = star_pass_1(self.genome_dir1, self.fastq_pair, self.tmp_output_dir_1, self.output_prefix)
@@ -76,3 +82,11 @@ class Aligner(object):
                     run_time= "01:00:00", job_name= "test_1", 
                     email= "kemal.sanli@scilifelab.se", command_line= command_line_4)
             
+        elif aligner == "kallisto":
+            command_line = kallisto_run(self.genome_index, self.output_dir, self.fastq_pair)
+
+            print Slurm("snic2016-1-184", resource_type= "core", n_resource = 8,
+                    run_time= "01:00:00", job_name= "test_1", 
+                    email= "kemal.sanli@scilifelab.se", command_line= command_line)
+
+

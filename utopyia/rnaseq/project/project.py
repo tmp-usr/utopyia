@@ -21,7 +21,7 @@ class Project(object):
         basedir, dirs, files= os.walk(self.dirpath).next()
         
         if self.replication_level == "sample":
-            s= Sample(base_dir, os.path.basename(basedir),
+            s= Sample(basedir, os.path.basename(basedir),
                    fastq_files= glob.glob(os.path.join(basedir, "*.fastq.gz")))
             self.samples.append(s)
 

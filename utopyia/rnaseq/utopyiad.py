@@ -19,7 +19,7 @@ import pdb
 
 
 class Utopyia(object):
-    def __init__(self, project_name, replication_level="lane"):
+    def __init__(self, project_name, replication_level= "replicate"):
 
         self.io_provider= RNASeqIOProvider()
 
@@ -43,68 +43,102 @@ class Utopyia(object):
 
 
     def init_samples(self):
-        self.all_replicates={}
+        self.all_fastq_containers={}
         for sample in self.project.samples:
-            for replicate in sample.replicates:
-                self.all_replicates[replicate] = sample
+            
+            if self.project.replication_level == "replicate":
+                self.all_fastq_containers[sample]  = sample
+                continue
+
+            elif self.project.replication_level == "lane": 
+                for replicate in sample.replicates:
+                    self.all_fastq_containers[replicate] = sample
                 
  
-    def concat_split_pairs(self, replicate,
+    def concat_split_pairs(self, fastq_container,
             merge_split_dir= "", 
-            n_seq= None):
+            concat= False,
+            max_n_seq= 5000):
         
-        sample_name = self.all_replicates[replicate].name
+        self.sample_name = self.all_fastq_containers[fastq_container].name
+        
+        if merge_split_dir == "":
+            merge_split_dir= self.merge_split_dir
 
-        fq_controller= FastQController(replicate, merge_split_dir= self.merge_split_dir, sample_name= sample_name)
+        fq_controller= FastQController(fastq_container, merge_split_dir= merge_split_dir, sample_name= self.sample_name, max_n_seq= max_n_seq)
+        
 
-        fq_controller.concat()
-        pair1, pair2 = fq_controller.yield_split_pairs()
-      
-        return pair1, pair2
+        if concat == True:
+            ### _pairs is a dict whereas result_pairs is a generator
+            _pairs= fq_controller.concat()
+       
+        if max_n_seq != None:
+            return fq_controller.yield_split_pairs()
+        
+        
+
+    def init_alignment(self, fastq_container, fastq_pair_generator):
+        j=0
+        for result in fastq_pair_generator:
+            for i, pair in enumerate(result, 1):
+                j+=1
 
 
-    def init_alignment(self, replicate):
-
-        j= 0
-        pair1, pair2= self.concat_split_pairs(replicate)
-        sample_name = self.all_replicates[replicate].name
-
-        for (i, reads_1), (i, reads_2) in izip(pair1, pair2):
-            j+=1 
+                ### general inputs
+                fastq_pair= FastQPair(pair[0], pair[1], name= fastq_container.name)
+                
+                aln_name= "%s_%s_%d" %(self.sample_name, fastq_container.name, i) 
+                aln_provider= self.io_provider.get_alignment_provider(aln_name)
+                
             
-            fastq_pair= FastQPair(reads_1, reads_2, name= replicate.name)
 
-            aln_name= "%s_%s_%d" %(sample_name, replicate.name, i) 
-            self.aln_provider= self.io_provider.get_alignment_provider(aln_name)
+                ### star inputs
+                aln_output_prefix= aln_provider.prefix.path
+                
+                self.sj_out=  aln_provider.sj_file.path
+                self.sam_out=  aln_provider.bam_file.path
+                self.count_out= aln_provider.count_file.path
+                
+                aln_tmp_provider= self.io_provider.get_alignment_tmp_provider(aln_name)
+                
+                self.genome_dir2= aln_tmp_provider.reindexed_genome_dir.path
+                self.tmp_output_dir1= aln_tmp_provider.tmp_output_dir1.path
+                self.tmp_output_dir2= aln_tmp_provider.tmp_output_dir2.path
+            
+                
+                # kallisto_inputs
+                self.genome_index= self.io_provider.ref_provider.genome_index
+                self.output_dir= aln_provider.__dict__[aln_name]
 
-            self.aln_output_prefix= self.aln_provider.prefix.path
-            
-            self.sj_out=  self.aln_provider.sj_file.path
-            self.sam_out=  self.aln_provider.bam_file.path
-            self.count_out= self.aln_provider.count_file.path
-            
-            self.aln_tmp_provider= self.io_provider.get_alignment_tmp_provider(aln_name)
-            
-            self.genome_dir2= self.aln_tmp_provider.reindexed_genome_dir.path
-            self.tmp_output_dir1= self.aln_tmp_provider.tmp_output_dir1.path
-            self.tmp_output_dir2= self.aln_tmp_provider.tmp_output_dir2.path
-                 
 
-            if j == 1:
-                pdb.set_trace()
-                break
+                aln= Aligner(
+                    fastq_pair= fastq_pair,
+                    output_dir= self.output_dir,
+                    genome_index= self.genome_index)
+
+                aln.align_fastq_pair()
+
+
+                if j == 1:
+                    pdb.set_trace()
+                    break
+
+                
+
 
 
         
     def run_parallel(self):
         p= Pool(processes= 2)
-        p.map(self.init_alignmen, dict(self.all_replicates.items()[:2]))#self.all_replicates)
+        p.map(self.init_alignmen, dict(self.all_fastq_containers.items()[:2]))#self.all_replicates)
         
 
 if __name__ == "__main__":
-    c= Controller("mock")
-    rep= dict(c.all_replicates.items()).keys()[0]
-
+    #c= Utopyia("mock", replication_level="replicate")
+    c= Utopyia("mock", replication_level="replicate")
+    rep= dict(c.all_fastq_containers.items()).keys()[0]
+    fastq_pair_generator= c.concat_split_pairs(rep, concat= False, max_n_seq= 5000)
+    c.init_alignment(rep, fastq_pair_generator)
     #[c.init_alignment(rep) for rep in c.all_replicates]
     #c.run_parallel() 
     
@@ -147,7 +181,8 @@ trash="""
             self.genome_dir2= self.aln_tmp_provider.reindexed_genome_dir.path
             self.tmp_output_dir1= self.aln_tmp_provider.tmp_output_dir1.path
             self.tmp_output_dir2= self.aln_tmp_provider.tmp_output_dir2.path
-
+            
+            self.output_dir= 
             
             
             aln= Aligner(
