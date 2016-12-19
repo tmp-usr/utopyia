@@ -79,6 +79,7 @@ class FastQController(object):
     def yield_split_pairs(self):        
         
         for k,v in self.pairs.iteritems():
+            
             fastq_1_handle= FastQSplitter(file_path= v[0], 
                 root_dir= self.merge_split_dir, sample_name= self.sample_name, 
                 n_seq= self.max_n_seq, compression_method= self.compression_method).run()

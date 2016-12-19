@@ -3,17 +3,23 @@ import os
 
 from project_objects import Sample, Replicate, Lane
 
+
+import pdb
+
 class Project(object):
     """
         replication_level= sample | replicate | lane
     """
 
-    def __init__(self, name, dirpath, replication_level= "replicate"):
+    def __init__(self, name, dirpath, replication_level= "replicate", file_extension= ".gz"):
+        
         self.name= name
         self.dirpath = dirpath
         self.replication_level = replication_level
         self.samples=[]
-    
+        
+        self.file_extension= file_extension
+
         self.populate_samples()
 
         
@@ -30,7 +36,7 @@ class Project(object):
             for sample_name in dirs:
                 sample_dir= os.path.join(basedir, sample_name)
                 s = Sample(sample_name, sample_dir,
-                    fastq_files= glob.glob(os.path.join(sample_dir, "*.fastq.gz")))
+                    fastq_files= glob.glob(os.path.join(sample_dir, "*%s" %self.file_extension)))
                 self.samples.append(s)
 
         elif self.replication_level == "lane":
@@ -41,8 +47,9 @@ class Project(object):
                 s=Sample(sample_name, sample_dir)
                 for replicate_name in replicate_dirs:
                     replicate_dir= os.path.join(sample_dir, replicate_name)
-                    r= Replicate(os.path.basename(replicate_dir), replicate_dir,
-                            fastq_files= glob.glob(os.path.join(replicate_dir, "*.fastq.gz")))
+                    r= Replicate(os.path.basename(replicate_dir), 
+                        replicate_dir, fastq_files= glob.glob(
+                        os.path.join(replicate_dir, "*.fastq.gz")))
                     s.replicates.append(r)
                 self.samples.append(s)
         

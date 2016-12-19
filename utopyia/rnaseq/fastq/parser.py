@@ -59,7 +59,7 @@ class FastQParser():
 
         Args:
 
-        * handle (iterable): any iterable including fastq sequences: e.g an open fastq file object.
+        * handle (iterator): any iterable including fastq sequences: e.g an open fastq file object.
 
         """
 

@@ -1,4 +1,5 @@
-from star_runs import *
+from star_runs import star_pass_1, star_pass_2, star_pass_3, generate_counts
+from kallisto_runs import kallisto_run
 
 from slurm import Slurm
 
@@ -84,7 +85,6 @@ class Aligner(object):
             
         elif aligner == "kallisto":
             command_line = kallisto_run(self.genome_index, self.output_dir, self.fastq_pair)
-
             print Slurm("snic2016-1-184", resource_type= "core", n_resource = 8,
                     run_time= "01:00:00", job_name= "test_1", 
                     email= "kemal.sanli@scilifelab.se", command_line= command_line)

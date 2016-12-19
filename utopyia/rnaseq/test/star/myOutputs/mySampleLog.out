@@ -312,31 +312,9 @@ twopass1readsN                    18446744073709551615
 twopassMode                       None
 ----------------------------------------
 
-WARNING --outSAMstrandField=intronMotif, therefore STAR will output XS attribute
-Finished loading and checking parameters
-Reading genome generation parameters:
-versionGenome                 20201        ~RE-DEFINED
-genomeFastaFiles              /home/ubuntu/SCRATCH/grch38_latest/GRCh38.d1.vd1.fa        ~RE-DEFINED
-genomeSAindexNbases           14     ~RE-DEFINED
-genomeChrBinNbits             18     ~RE-DEFINED
-genomeSAsparseD               1     ~RE-DEFINED
-sjdbOverhang                  100     ~RE-DEFINED
-sjdbFileChrStartEnd           -        ~RE-DEFINED
-sjdbGTFfile                   ../grch38_genome/gencode.v22.annotation.gtf     ~RE-DEFINED
-sjdbGTFchrPrefix              -     ~RE-DEFINED
-sjdbGTFfeatureExon            exon     ~RE-DEFINED
-sjdbGTFtagExonParentTranscripttranscript_id     ~RE-DEFINED
-Genome version is compatible with current STAR version
-Started loading the genome: Sun Dec 18 18:40:46 2016
 
-checking Genome sizefile size: 3885865849 bytes; state: good=1 eof=0 fail=0 bad=0
-checking SA sizefile size: 24848724673 bytes; state: good=1 eof=0 fail=0 bad=0
-checking /SAindex sizefile size: 1565873616 bytes; state: good=1 eof=0 fail=0 bad=0
-Read from SAindex: genomeSAindexNbases=14  nSAi=357913940
-nGenome=3885865849;  nSAbyte=24848724673
-GstrandBit=32   SA number of indices=6023933254
-Shared memory is not used for genomes. Allocated a private copy of the genome.
-Genome file size: 3885865849 bytes; state: good=1 eof=0 fail=0 bad=0
-Loading Genome ... done! state: good=1 eof=0 fail=0 bad=0; loaded 3885865849 bytes
-SA file size: 24848724676 bytes; state: good=1 eof=0 fail=0 bad=0
-Loading SA ... 
+EXITING because of fatal ERROR: could not make temporary directory: ./myTmpDir
+SOLUTION: (i) please check the path and writing permissions 
+ (ii) if you specified --outTmpDir, and this directory exists - please remove it before running STAR
+
+Dec 19 14:14:34 ...... FATAL ERROR, exiting

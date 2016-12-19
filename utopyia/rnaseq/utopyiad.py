@@ -21,7 +21,7 @@ import pdb
 
 
 class Utopyia(object):
-    def __init__(self, project_name, replication_level= "replicate"):
+    def __init__(self, project_name, replication_level= "replicate", file_extension= ".gz"):
 
         self.io_provider= RNASeqIOProvider()
 
@@ -37,7 +37,7 @@ class Utopyia(object):
 
         ####################
         self.project= Project(project_name, self.input_root_dir, 
-                replication_level = replication_level)
+                replication_level = replication_level, file_extension= file_extension)
 
         self.init_samples()
         #self.run_parallel()
@@ -46,8 +46,7 @@ class Utopyia(object):
 
     def init_samples(self):
         self.all_fastq_containers={}
-        for sample in self.project.samples:
-            
+        for sample in self.project.samples: 
             if self.project.replication_level == "replicate":
                 self.all_fastq_containers[sample]  = sample
 
@@ -61,16 +60,17 @@ class Utopyia(object):
             concat= False,
             max_n_seq= 5000):
         
-        pdb.set_trace()
-
         self.sample_name = self.all_fastq_containers[fastq_container].name
         
         if merge_split_dir == "":
             merge_split_dir= self.merge_split_dir
 
-        fq_controller= FastQController(fastq_container, merge_split_dir= merge_split_dir, sample_name= self.sample_name, max_n_seq= max_n_seq, compression_method= compression_method)
+        fq_controller= FastQController(fastq_container, merge_split_dir= merge_split_dir, 
+                sample_name= self.sample_name, max_n_seq= max_n_seq, 
+                compression_method= compression_method, fname_extension= ".fastq.bz2",
+                fname_order_index= 0)
         
-
+        
         if concat == True:
             ### _pairs is a dict whereas result_pairs is a generator
             _pairs= fq_controller.concat()
@@ -90,13 +90,14 @@ class Utopyia(object):
                 print pair
 
                 ### general inputs
-                fastq_pair= FastQPair(pair[0], pair[1], name= fastq_container.name)
                 
-                aln_name= "%s_%s_%d" %(self.sample_name, fastq_container.name, i) 
+                pair_name= os.path.basename(pair[0]).replace(".fastq","")
+                fastq_pair= FastQPair(pair[0], pair[1], name= pair_name)
+                
+                aln_name= "%s_%s" %(self.sample_name, pair_name) 
                 aln_provider= self.io_provider.get_alignment_provider(aln_name)
                 
             
-
                 ### star inputs
                 aln_output_prefix= aln_provider.prefix.path
                 
@@ -114,35 +115,33 @@ class Utopyia(object):
                 # kallisto_inputs
                 self.genome_index= self.io_provider.ref_provider.genome_index
                 self.output_dir= aln_provider.__dict__[aln_name]
+                
 
-
+                
                 aln= Aligner(
                     fastq_pair= fastq_pair,
                     output_dir= self.output_dir,
                     genome_index= self.genome_index)
 
-                aln.align_fastq_pair()
-
+                aln.align_fastq_pair(aligner= "kallisto")
 
                 if j == 1:
                     pdb.set_trace()
                     break
-
+                    break
                 
 
 
-
-        
     def run_parallel(self):
         p= Pool(processes= 2)
-        p.map(self.init_alignmen, dict(self.all_fastq_containers.items()[:2]))#self.all_replicates)
+        p.map(self.init_alignment, dict(self.all_fastq_containers.items()[:2]))#self.all_replicates)
         
 
 if __name__ == "__main__":
     #c= Utopyia("mock", replication_level="replicate")
-    c= Utopyia("mock", replication_level="replicate")
+    c= Utopyia("mock", replication_level="replicate", file_extension= ".bz2")
     rep= dict(c.all_fastq_containers.items()).keys()[0]
-    fastq_pair_generator= c.concat_split_pairs(rep, concat= False, max_n_seq= 10000)
+    fastq_pair_generator= c.concat_split_pairs(rep, concat= False, max_n_seq= 1000)
     c.init_alignment(rep, fastq_pair_generator)
     #[c.init_alignment(rep) for rep in c.all_replicates]
     #c.run_parallel() 

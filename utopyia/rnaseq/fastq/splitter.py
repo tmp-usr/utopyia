@@ -3,6 +3,13 @@ import subprocess
 import gzip
 import shutil
 
+import io
+import StringIO
+import tempfile
+import bz2
+from bz2 import BZ2File
+import tarfile
+
 from janitor.batch_reader import BatchReader
 
 from fastq.parser import FastQParser
@@ -10,15 +17,26 @@ from fastq.parser import FastQParser
 
 from multiprocessing import Pool
 
+import pdb
+
+
+
 class FastQSplitter(object):
     def __init__(self, file_path, root_dir, sample_name, 
                 compressed= True, n_seq= 1000, compression_method= "gzip"):
         
         self.file_path= file_path
-        split_basename= "%s_sp" % os.path.basename(file_path).replace(".fastq%s" %compression_method, "")
-        self.split_dir= os.path.join(root_dir, sample_name, "split", split_basename)
 
-        self.split_prefix= os.path.basename(self.file_path).replace(".fastq.gz","")
+
+        if compression_method == "gzip":
+            extension= ".gz"
+
+        elif compression_method == "bzip":
+            extension= ".bz2"
+
+        split_basename= "%s_sp" % os.path.basename(file_path).replace(".fastq%s" %extension, "")
+        self.split_dir= os.path.join(root_dir, sample_name, "split", split_basename)
+        self.split_prefix= os.path.basename(self.file_path).replace(".fastq%s" %extension,"")
         self.split_fastq_files= []
         self.compressed= compressed
         self.compression_method= compression_method
@@ -59,12 +77,14 @@ class FastQSplitter(object):
             handle= gzip.open(self.file_path, "rb")
         
         elif self.compression_method == "bzip":
-            handle= BZ2File(self.file_path, "rb")
-        
+            tmp_file= tempfile.NamedTemporaryFile(delete= False)
+            command_line= "bzcat -dkf %s > %s" %(self.file_path, tmp_file.name)
+            p= subprocess.Popen(command_line, shell= True).wait()
+            handle= open(tmp_file.name, "r")
+
         seq_handle= FastQParser(handle).fastq_sequences
-       
         br= BatchReader(self.n_seq ,seq_handle)
-    
+        
         for i, chunk in enumerate(br, 1):
             if decompress:
                 split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq" % (self.split_prefix, i))
@@ -77,7 +97,10 @@ class FastQSplitter(object):
                     
             split_fastq.write("".join(str(seq) for seq in chunk))
             split_fastq.close()
+
             yield i, split_fastq_path
+
+
 
  
 
