@@ -15,8 +15,7 @@ class FastQSplitter(object):
                 compressed= True, n_seq= 1000, compression_method= "gzip"):
         
         self.file_path= file_path
-        split_basename= "%s_sp" % 
-            os.path.basename(file_path).replace(".fastq%s" %compression_method, "")
+        split_basename= "%s_sp" % os.path.basename(file_path).replace(".fastq%s" %compression_method, "")
         self.split_dir= os.path.join(root_dir, sample_name, "split", split_basename)
 
         self.split_prefix= os.path.basename(self.file_path).replace(".fastq.gz","")

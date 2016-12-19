@@ -8,6 +8,8 @@ from project.project import Project
 from helper.file_provider import RNASeqIOProvider
 from fastq.pair import FastQPair
 from fastq.controller import FastQController
+from config.rnaseq_config import compression_method
+
 
 from multiprocessing import cpu_count
 from pathos.multiprocessing import ProcessingPool as Pool
@@ -48,7 +50,6 @@ class Utopyia(object):
             
             if self.project.replication_level == "replicate":
                 self.all_fastq_containers[sample]  = sample
-                continue
 
             elif self.project.replication_level == "lane": 
                 for replicate in sample.replicates:
@@ -60,6 +61,8 @@ class Utopyia(object):
             concat= False,
             max_n_seq= 5000):
         
+        pdb.set_trace()
+
         self.sample_name = self.all_fastq_containers[fastq_container].name
         
         if merge_split_dir == "":
@@ -81,8 +84,10 @@ class Utopyia(object):
         j=0
         for result in fastq_pair_generator:
             for i, pair in enumerate(result, 1):
+                
                 j+=1
-
+                
+                print pair
 
                 ### general inputs
                 fastq_pair= FastQPair(pair[0], pair[1], name= fastq_container.name)
@@ -137,7 +142,7 @@ if __name__ == "__main__":
     #c= Utopyia("mock", replication_level="replicate")
     c= Utopyia("mock", replication_level="replicate")
     rep= dict(c.all_fastq_containers.items()).keys()[0]
-    fastq_pair_generator= c.concat_split_pairs(rep, concat= False, max_n_seq= 5000)
+    fastq_pair_generator= c.concat_split_pairs(rep, concat= False, max_n_seq= 10000)
     c.init_alignment(rep, fastq_pair_generator)
     #[c.init_alignment(rep) for rep in c.all_replicates]
     #c.run_parallel() 
@@ -198,18 +203,3 @@ trash="""
             aln.align_fastq_pair()
 """
 
-
-trash="""          
-            aln= Aligner(
-                fastq_pair= fastq_pair,
-                genome_dir1= self.genome_dir1, genome_dir2= self.genome_dir2, 
-                genome_fasta_path= self.genome_fasta_path, sj_out= self.sj_out, 
-                sam_out= self.sam_out, gtf_file= self.gtf_file, 
-                count_out= self.count_out, 
-                tmp_output_dir_1= self.tmp_output_dir1, 
-                tmp_output_dir_2= self.tmp_output_dir2,
-                output_prefix= self.aln_output_prefix)
-
-            aln.align_fastq_pair()
-"""
-   
