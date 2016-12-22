@@ -1,4 +1,4 @@
-def star_pass_1(genome_dir1, fastq_pair, tmp_output_dir_1, output_prefix):
+def star_pass_1(genome_dir1, reads1, reads2, tmp_output_dir_1, output_prefix):
     """
         --outFileNamePrefix directories should all be created.
         --outTmpDir replaces _STARtmp 
@@ -24,7 +24,7 @@ STAR \
 --outSAMstrandField intronMotif \
 --outSAMtype None \
 --outFileNamePrefix %s
-""" % (fastq_pair.reads_1, fastq_pair.reads_2, genome_dir1, tmp_output_dir_1, output_prefix)
+""" % (reads1, reads2, genome_dir1, tmp_output_dir_1, output_prefix)
     return command_line
 
 def star_pass_2(genome_dir2, genome_fasta_path, sj_out):
@@ -39,7 +39,7 @@ STAR \
 """ % (genome_dir2, genome_fasta_path, sj_out )
     return command_line
 
-def star_pass_3(genome_dir2, fastq_pair, tmp_output_dir_2, output_prefix):
+def star_pass_3(genome_dir2, reads1, reads2, tmp_output_dir_2, output_prefix):
     command_line= """
 STAR \
 --genomeDir %s \
@@ -64,7 +64,7 @@ STAR \
 --outSAMtype BAM SortedByCoordinate \
 --outSAMheaderHD @HD VN:1.4 \
 --outFileNamePrefix %s
-""" %(genome_dir2, fastq_pair.reads_1, fastq_pair.reads_2, tmp_output_dir_2, output_prefix)
+""" %(genome_dir2, reads1, fastq_pair.reads2, tmp_output_dir_2, output_prefix)
     return command_line
 
 

@@ -1,8 +1,12 @@
 import glob
 import os
+import sys
+from collections import OrderedDict
+
+sys.path.append("../")
 
 from project_objects import Sample, Replicate, Lane
-
+from fastq.file_learner import FastQFileLearner
 
 import pdb
 
@@ -11,33 +15,49 @@ class Project(object):
         replication_level= sample | replicate | lane
     """
 
-    def __init__(self, name, dirpath, replication_level= "replicate", file_extension= ".gz"):
+    def __init__(self, name, root_dir, replication_level= "replicate", 
+            fname_column_separator="_", fname_read_index=-1, 
+            fname_order_index=0, fname_extension=".fastq.gz"):
+        
+        self.learner= FastQFileLearner(fname_column_separator, fname_read_index, fname_order_index, fname_extension)
         
         self.name= name
-        self.dirpath = dirpath
+        self.root_dir = root_dir
         self.replication_level = replication_level
         self.samples=[]
         
-        self.file_extension= file_extension
-
-        self.populate_samples()
-
+        self.all_fastq_containers= {}
         
-    def populate_samples(self):
-        basedir, dirs, files= os.walk(self.dirpath).next()
+        self.new_fastq_containers= {}
+        self.trashed_fastq_container= {}
+    
+        
+    def update_fastq_container(self, container, container_name, fastq_files):
+        self.new_fastq_containers[container_name] = container
+        container.fastq_files= fastq_files
+        
+    def populate_fastq_containers(self):
+        
+        basedir, dirs, files= os.walk(self.root_dir).next()
         
         if self.replication_level == "sample":
-            s= Sample(basedir, os.path.basename(basedir),
-                   fastq_files= glob.glob(os.path.join(basedir, "*.fastq.gz")))
+            fastq_container_name= basedir
+            s= Sample(fastq_container_name, os.path.basename(basedir),
+                   fastq_files= glob.glob(os.path.join(basedir, "*%s" %self.learner.fname_extension)))
             self.samples.append(s)
+            self.all_fastq_containers[fastq_container_name] = s
 
 
         elif self.replication_level == "replicate":
             for sample_name in dirs:
                 sample_dir= os.path.join(basedir, sample_name)
                 s = Sample(sample_name, sample_dir,
-                    fastq_files= glob.glob(os.path.join(sample_dir, "*%s" %self.file_extension)))
+                    fastq_files= glob.glob(os.path.join(sample_dir, 
+                        "*%s" %self.learner.fname_extension)),                     
+                         learner= self.learner)
                 self.samples.append(s)
+                fastq_container_name= sample_name
+                self.all_fastq_containers[fastq_container_name] = s
 
         elif self.replication_level == "lane":
             for sample_name in dirs:
@@ -47,10 +67,32 @@ class Project(object):
                 s=Sample(sample_name, sample_dir)
                 for replicate_name in replicate_dirs:
                     replicate_dir= os.path.join(sample_dir, replicate_name)
-                    r= Replicate(os.path.basename(replicate_dir), 
-                        replicate_dir, fastq_files= glob.glob(
-                        os.path.join(replicate_dir, "*.fastq.gz")))
+                    r= Replicate(name= '%s_%s' %(sample_name, replicate_name), 
+                        dirpath= replicate_dir, fastq_files= glob.glob(
+                        os.path.join(replicate_dir, "*%s" %self.learner.fname_extension)), 
+                        learner= self.learner
+                        )
                     s.replicates.append(r)
+                    fastq_container_name= "%s_%s" %(sample_name, replicate_name)
+                    self.all_fastq_containers[fastq_container_name] = r 
                 self.samples.append(s)
+       
+
+    def get_fastq_pairs_by_container(self, container):
+        """
+            order id is the field in the file name which distinguises the pairs
+            from each other.
         
+        """
+        return container.pairs 
+
+
+
+
+
+
+
+
+#fcm= FastQContainerMerger(rep, ".")
+#fcm.merge_container()
 

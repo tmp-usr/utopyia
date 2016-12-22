@@ -8,21 +8,12 @@ class FastQFileLearner(object):
         self.fname_column_separator= fname_column_separator
         self.fname_read_index= fname_read_index
         self.fname_order_index= fname_order_index
-        self.fname_extension= ".fastq%s" %fname_extension
+        self.fname_extension= fname_extension
         self.file_path = None
 
     def set_file(self, file_path):
         self.file_path = file_path
-    
-    def trim_extension(self):
-        trimmed= self.fname.replace(self.fname_extension, "")
-        #for ext in self.fname_extension.split(".")[1:]:
-        #    trimmed= trimmed.replace(".%s" %ext, "")
-        return trimmed
 
-    @property
-    def fname(self):
-        return os.path.basename(self.file_path)
 
     @property
     def fname_fields(self):

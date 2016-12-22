@@ -72,7 +72,7 @@ class FastQSplitter(object):
         
         for i, chunk in enumerate(br, 1):
             if decompress or self.compressed == False:
-                split_fastq_path= os.path.join(self.split_dir, "%d.fastq" % i)
+                split_fastq_path= os.path.join(self.split_dir, "%s_%d.fastq" % (self.split_prefix, i))
                 split_fastq= open(split_fastq_path, "w") 
 
             else:
@@ -118,9 +118,9 @@ class FastQContainerSplitter(object):
             split_dir_path2= os.path.join(self.split_dir, split_dir_name2)  
 
             if not os.path.exists(split_dir_path1):
-                os.makedirs(split_dir_path1)
+                os.mkdir(split_dir_path1)
             if not os.path.exists(split_dir_path2):
-                os.makedirs(split_dir_path2)
+                os.mkdir(split_dir_path2)
 
             split_handle1 = FastQSplitter(pair1, split_dir_path1, compressed= True, 
                     n_seq= self.n_seq, compression_method= self.compression_method).split()

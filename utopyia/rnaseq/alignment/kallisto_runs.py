@@ -1,4 +1,4 @@
-def kallisto_run(genome_index, output_dir, fastq_pair):
+def kallisto_run(genome_index, output_dir, reads1, reads2):
     """
 kallisto inputs differ from star. kallisto requires a pregenerated index file as input.
 @kallisto_genome_index
@@ -12,5 +12,5 @@ kallisto inputs differ from star. kallisto requires a pregenerated index file as
 module load kallisto/0.43.0
 
 kallisto quant -i %s -o %s -t 16 %s %s
-""" %(genome_index, output_dir, fastq_pair.reads_1, fastq_pair.reads_2)
+""" %(genome_index, output_dir, reads1, reads2)
     return command_line
