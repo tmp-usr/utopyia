@@ -44,14 +44,14 @@ self.run_time, self.job_name, self.email, self.command_line)
         
         #batch_line= "sbatch %s" %self.batch_file.name
         
-        #batch_line= "bash %s" %self.batch_file.name
-        #p= subprocess.Popen(batch_line, shell= True, 
-        #        stdout= subprocess.PIPE, stderr= subprocess.PIPE)
+        batch_line= "bash %s" %self.batch_file.name
+        p= subprocess.Popen(batch_line, shell= True, 
+                stdout= subprocess.PIPE, stderr= subprocess.PIPE)
 
-        #out, err= p.communicate()
+        out, err= p.communicate()
 
-        #print out 
-        #print
-        #print err
+        print out 
+        print
+        print err
 
         return self.content

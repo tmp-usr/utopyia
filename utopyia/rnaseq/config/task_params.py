@@ -1,14 +1,14 @@
+# merge split decompress
+compression_method= "bzip"
+max_n_seq=1000
+
 # project
 project_name= "mock"
 replication_level= "replicate"
 fname_column_separator= "_"
 fname_read_index= -1
 fname_order_index= 0
-fname_extension= ".gz"
-
-# merge split decompress
-compression_method= "gzip"
-max_n_seq=1000
+fname_extension= ".bz2" if compression_method == "bzip" else ".gz"
 
 # sbatch
 job_id= "snic2016-1-184"

@@ -1,6 +1,9 @@
 import os
 import copy
 
+import pdb
+
+
 ######## TODO: Fill in raw_data_dir, tmp_dir, output_dir
 #              reference_genome_dir, if required change 
 #              the reference genome index params. 
@@ -9,8 +12,11 @@ import copy
 #              from the template dictionary "task" below.
 
 ### Project
-project_dir=  "/Users/kemal/Desktop/postdoc/projects/mock_low_carb"
+# local
+#project_dir=  "/Users/kemal/Desktop/postdoc/projects/mock_low_carb"
 
+# server
+project_dir= "/home/adilm/projects/mock_low_carb"
 ###
 raw_data_dir= os.path.join(project_dir, "raw_data")
 #tmp_dir= os.environ["SNIC_TMP"]
@@ -86,6 +92,8 @@ def gen_align_io(method, fastq_container, reads1_path, reads2_path, file_learner
     align["input_files"]["reads1"]= reads1_path
     align["input_files"]["reads2"]= reads2_path
     file_learner.set_file(reads1_path)
+    
+    pdb.set_trace()
     align["output_dirs"]["output_dir"]= os.path.join(alignment_output_dir, fastq_container.name, file_learner.trim_extension())
 
     if method == "kallisto":
