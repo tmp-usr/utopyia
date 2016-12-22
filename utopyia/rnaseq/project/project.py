@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 sys.path.append("../")
 
-from project_objects import Sample, Replicate, Lane
+from project_objects import Sample, Replicate, Lane, FastQContainer
 from fastq.file_learner import FastQFileLearner
 
 import pdb
@@ -27,15 +27,17 @@ class Project(object):
         self.samples=[]
         
         self.all_fastq_containers= {}
-        
         self.new_fastq_containers= {}
+        
         self.trashed_fastq_container= {}
-    
         
-    def update_fastq_container(self, container, container_name, fastq_files):
-        self.new_fastq_containers[container_name] = container
-        container.fastq_files= fastq_files
         
+        
+    def update_fastq_containers(self, container_name, dirpath):
+        
+        if container_name not in self.new_fastq_containers:
+            self.new_fastq_containers[container_name] = FastQContainer(container_name, dirpath)
+
     def populate_fastq_containers(self):
         
         basedir, dirs, files= os.walk(self.root_dir).next()
@@ -77,6 +79,7 @@ class Project(object):
                     self.all_fastq_containers[fastq_container_name] = r 
                 self.samples.append(s)
        
+        self.current_fastq_containers= self.all_fastq_containers
 
     def get_fastq_pairs_by_container(self, container):
         """

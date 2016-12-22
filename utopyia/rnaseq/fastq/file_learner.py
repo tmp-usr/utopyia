@@ -14,10 +14,9 @@ class FastQFileLearner(object):
     def set_file(self, file_path):
         self.file_path = file_path
     
-    def trim_extension(self):
-        trimmed= self.fname.replace(self.fname_extension, "")
-        #for ext in self.fname_extension.split(".")[1:]:
-        #    trimmed= trimmed.replace(".%s" %ext, "")
+    def trim_extension(self, ext= ""):
+        trimmed= self.fname
+        while os.path.splitext(trimmed)[1] != '':trimmed= os.path.splitext(trimmed)[0]
         return trimmed
 
     @property

@@ -19,7 +19,8 @@ class Align(Task):
     def __init__(self, fastq_container, reads1_path, reads2_path, file_learner,
                      method= "kallisto",  log_message="", **kwargs):
         
-        align_io= gen_align_io(method, fastq_container, reads1_path, reads2_path, file_learner)
+        align_io= gen_align_io(method, fastq_container, 
+                reads1_path, reads2_path, file_learner)
         align_io_provider= AlignIOProvider(**align_io)
         
         Task.__init__(self, align_io_provider, log_message)
@@ -68,5 +69,4 @@ class Align(Task):
                              output_prefix= output_prefix)
 
         aligner.align(method= method)
-
 

@@ -1,5 +1,5 @@
 # merge split decompress
-compression_method= "bzip"
+compression_method= "gzip"
 max_n_seq=1000
 
 # project

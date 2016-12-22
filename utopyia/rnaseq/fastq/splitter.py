@@ -103,6 +103,9 @@ class FastQContainerSplitter(object):
             in the intermediary steps like this. see the split_dir below.
 
         """
+        new_containers= {}
+        old_name= self.container.name
+        
         for pair1, pair2 in self.container.pairs.values():
             
             self.container.learner.set_file(pair1)
@@ -128,10 +131,13 @@ class FastQContainerSplitter(object):
             split_handle2 = FastQSplitter(pair2, split_dir_path2, compressed= True, 
                     n_seq= self.n_seq, compression_method= self.compression_method).split()
 
+            if split_dir_name1 not in new_containers:
+                new_containers[split_dir_name1] = 1
+                self.container.name = "%s_%s" %(old_name, split_dir_name1.rstrip("_1")) 
             
             yield izip(map(itemgetter(1), split_handle1), map(itemgetter(1), split_handle2))
 
-        
+#### TODO: construct new containers with the new names. the current version is enough to initiate the runs
 
 trash="""
     @property
