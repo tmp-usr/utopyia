@@ -67,7 +67,6 @@ class Aligner(object):
             
     def align(self, method= "star"):
         
-        print method
         if method == "star":
             command_line_1 = star_pass_1(self.genome_dir1, self.reads1, self.reads2, self.tmp_output_dir_1, self.output_prefix)
             command_line_2 = star_pass_2(self.genome_dir2, self.genome_fasta_path, self.sj_out)

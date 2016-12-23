@@ -25,8 +25,10 @@ class Align(Task):
         
         Task.__init__(self, align_io_provider, log_message)
         
+        self.name= fastq_container.name + "_" +file_learner.trim_extension()
+        self.method= method
 
-    def run(self, method= "kallisto", *args):
+    def run(self):
         input_params= self.io_provider.input_provider
         output_params= self.io_provider.output_provider
         tmp_params= self.io_provider.tmp_provider
@@ -36,7 +38,7 @@ class Align(Task):
         
         alignment_output_dir= output_params.output_dir.path
         ### kallisto specific params
-        if method == "kallisto":
+        if self.method == "kallisto":
             genome_index= input_params.genome_index.path
             
             aligner= Aligner(genome_index= genome_index, 
@@ -44,7 +46,7 @@ class Align(Task):
                              reads1= reads1, reads2= reads2)
         
         ### star specific params
-        elif method == "star":
+        elif self.method == "star":
 
             genome_dir1= input_params.genome_dir1.path 
             genome_dir2= tmp_params.genome_dir2.path
@@ -68,5 +70,5 @@ class Align(Task):
                              count_out= count_out, gtf_file= gtf_file, 
                              output_prefix= output_prefix)
 
-        aligner.align(method= method)
+        aligner.align(method= self.method)
 

@@ -13,19 +13,19 @@ import pdb
 
 ### Project
 # local
-project_dir=  "/Users/kemal/Desktop/postdoc/projects/mock_low_carb"
+#project_dir=  "/Users/kemal/Desktop/postdoc/projects/mock_low_carb"
 
 # server
-#project_dir= "/home/adilm/projects/mock_low_carb"
+project_dir= "/home/adilm/projects/mock_low_carb"
 ###
 raw_data_dir= os.path.join(project_dir, "raw_data")
-#tmp_dir= os.environ["SNIC_TMP"]
-tmp_dir= os.path.join(project_dir, "tmp")
+tmp_dir= os.environ["SNIC_TMP"]
+#tmp_dir= os.path.join(project_dir, "tmp")
 output_dir= os.path.join(project_dir, "outputs")
 
 
 ###
-alignment_tmp_dir= os.path.join(tmp_dir, "alignment")
+alignment_tmp_dir= os.path.join(output_dir, "alignment")
 alignment_output_dir= os.path.join(output_dir, "alignment")
 
 
@@ -82,13 +82,25 @@ def gen_split_io(fastq_container):
     return split
 
 
+def gen_count_io(sample_abundance_dir):
+    count= copy.deepcopy(task)
+
+    count["root_dir"] = alignment_output_dir
+    count["input_files"]["abundance"]= os.path.join(sample_abundance_dir, "abundance.tsv" )
+    
+    count["output_files"]["gene"]= os.path.join(alignment_output_dir, "gene_counts.tsv")
+    count["output_files"]["transcript"]= os.path.join(alignment_output_dir, "transcript_counts.tsv")
+    
+
+    return count
+
 
 #### align params
 def gen_align_io(method, fastq_container, reads1_path, reads2_path, file_learner):
     # initiating the empty dictionary
     align= copy.deepcopy(task)
 
-    align["root_dir"]= os.path.join(output_dir, "alignment")
+    align["root_dir"]= alignment_tmp_dir
     align["input_files"]["reads1"]= reads1_path
     align["input_files"]["reads2"]= reads2_path
     file_learner.set_file(reads1_path)

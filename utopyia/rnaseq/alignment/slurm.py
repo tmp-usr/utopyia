@@ -42,9 +42,9 @@ self.run_time, self.job_name, self.email, self.command_line)
         self.batch_file.write(self.content)
         self.batch_file.close()
         
-        #batch_line= "sbatch %s" %self.batch_file.name
+        batch_line= "sbatch %s" %self.batch_file.name
         
-        batch_line= "bash %s" %self.batch_file.name
+        #batch_line= "bash %s" %self.batch_file.name
         p= subprocess.Popen(batch_line, shell= True, 
                 stdout= subprocess.PIPE, stderr= subprocess.PIPE)
 
