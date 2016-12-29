@@ -6,6 +6,7 @@ from alignment.aligner import Aligner
 
 from config.task_io import gen_align_io
 
+import pdb
 
 class AlignIOProvider(TaskIOProvider):
     def __init__(self, root_dir, input_files, output_dirs, output_files, **kwargs):
@@ -37,6 +38,8 @@ class Align(Task):
         reads2= input_params.reads2.path
         
         alignment_output_dir= output_params.output_dir.path
+        
+        #pdb.set_trace()
         ### kallisto specific params
         if self.method == "kallisto":
             genome_index= input_params.genome_index.path

@@ -16,10 +16,11 @@ import pdb
 #project_dir=  "/Users/kemal/Desktop/postdoc/projects/mock_low_carb"
 
 # server
-project_dir= "/home/adilm/projects/mock_low_carb"
+project_dir= "/home/adilm/projects/low_carb2"
 ###
 raw_data_dir= os.path.join(project_dir, "raw_data")
-tmp_dir= os.environ["SNIC_TMP"]
+tmp_dir= "/proj/b2016253/nobackup/kemal2"    
+#os.environ["SNIC_TMP"]
 #tmp_dir= os.path.join(project_dir, "tmp")
 output_dir= os.path.join(project_dir, "outputs")
 
@@ -82,11 +83,10 @@ def gen_split_io(fastq_container):
     return split
 
 
-def gen_count_io(sample_abundance_dir):
+def gen_count_io():
     count= copy.deepcopy(task)
 
     count["root_dir"] = alignment_output_dir
-    count["input_files"]["abundance"]= os.path.join(sample_abundance_dir, "abundance.tsv" )
     
     count["output_files"]["gene"]= os.path.join(alignment_output_dir, "gene_counts.tsv")
     count["output_files"]["transcript"]= os.path.join(alignment_output_dir, "transcript_counts.tsv")

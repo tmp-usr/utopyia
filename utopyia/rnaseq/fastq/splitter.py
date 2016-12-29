@@ -34,12 +34,17 @@ class FastQSplitter(object):
                        compression_method= "gzip"):
         
         self.file_path= file_path
+        
+        
 
         if compression_method == "gzip":
             extension= ".gz"
 
         elif compression_method == "bzip":
             extension= ".bz2"
+
+        elif compression_method == "tar.gz":
+            extension= ".tar.gz"
 
         #split_basename= "%s_sp" % os.path.basename(file_path).replace(".fastq%s" %extension, "")
         self.split_dir= split_dir #os.path.join(root_dir, sample_name, "split", split_basename)
@@ -86,8 +91,8 @@ class FastQSplitter(object):
 
 
 class FastQContainerSplitter(object):
-    def __init__(self, container, split_dir, n_seq= 1000, compression_method= "gzip"):
-        self.container = container
+    def __init__(self, fastq_container, split_dir, n_seq= 1000, compression_method= "gzip"):
+        self.fastq_container = fastq_container
         self.split_dir= split_dir
         self.n_seq=n_seq
         self.compression_method= compression_method
@@ -104,15 +109,15 @@ class FastQContainerSplitter(object):
 
         """
         new_containers= {}
-        old_name= self.container.name
+        old_name= self.fastq_container.name
         
-        for pair1, pair2 in self.container.pairs.values():
+        for pair1, pair2 in self.fastq_container.pairs.values():
             
-            self.container.learner.set_file(pair1)
-            fname1=  self.container.learner.trim_extension()
+            self.fastq_container.learner.set_file(pair1)
+            fname1=  self.fastq_container.learner.trim_extension()
 
-            self.container.learner.set_file(pair2)
-            fname2= self.container.learner.trim_extension()
+            self.fastq_container.learner.set_file(pair2)
+            fname2= self.fastq_container.learner.trim_extension()
  
             split_dir_name1= fname1
             split_dir_path1= os.path.join(self.split_dir, split_dir_name1)   
@@ -124,6 +129,7 @@ class FastQContainerSplitter(object):
                 os.makedirs(split_dir_path1)
             if not os.path.exists(split_dir_path2):
                 os.makedirs(split_dir_path2)
+            
 
             split_handle1 = FastQSplitter(pair1, split_dir_path1, compressed= True, 
                     n_seq= self.n_seq, compression_method= self.compression_method).split()
@@ -133,7 +139,7 @@ class FastQContainerSplitter(object):
 
             if split_dir_name1 not in new_containers:
                 new_containers[split_dir_name1] = 1
-                self.container.name = "%s_%s" %(old_name, split_dir_name1.rstrip("_1")) 
+                self.fastq_container.name = "%s_%s" %(old_name, split_dir_name1.rstrip("_1")) 
             
             yield izip(map(itemgetter(1), split_handle1), map(itemgetter(1), split_handle2))
 

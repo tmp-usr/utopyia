@@ -22,6 +22,7 @@ class SplitContainer(Task):
         
         Task.__init__(self, split_io_provider, log_message)
         self.fastq_container= fastq_container
+    
 
     def run(self, **kwargs):
         """
@@ -43,6 +44,7 @@ class SplitContainer(Task):
             for pair in result:
                 yield pair
 
+        
 
     def init_params(self):
         self.compressed= True

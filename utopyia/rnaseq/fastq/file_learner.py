@@ -35,7 +35,7 @@ class FastQFileLearner(object):
 
     @property
     def order_id(self):
-        return int(self.fname_fields[self.fname_order_index])
+        return self.fname_fields[self.fname_order_index]
 
 
  
