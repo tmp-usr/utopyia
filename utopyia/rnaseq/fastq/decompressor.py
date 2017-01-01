@@ -18,7 +18,7 @@ class FastQDecompressor(object):
         
         elif self.compression_method == "tar.gz":
             tmp_file= tempfile.NamedTemporaryFile(delete= False)
-            command_line= "tar -xzf %s > %s" %(self.compressed_file_path, tmp_file.name)
+            command_line= "tar -xOzf  %s > %s" %(self.compressed_file_path, tmp_file.name)
             p= subprocess.Popen(command_line, shell= True).wait()
             handle= open(tmp_file.name, "r")
 

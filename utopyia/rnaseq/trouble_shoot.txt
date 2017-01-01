@@ -1,0 +1,9 @@
+- python module bz2 does not iteratively read large files.we have to use the unix command bzcat instead.
+
+- janitors output provider options remove existing and create should be checked for individual temporary and permanent output files.
+
+- when we submit a batch job in the interactive kernel, indiviual batch jobs might not have access to the temporary space of the interactive kernel. so do not start batch jobs in the interactive kernel.
+
+- improve the counter module by collating the split read samples in previous steps.
+ 
+

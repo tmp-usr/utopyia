@@ -1,0 +1,6 @@
+
+EXITING because of fatal ERROR: could not make temporary directory: ./myTmpDir
+SOLUTION: (i) please check the path and writing permissions 
+ (ii) if you specified --outTmpDir, and this directory exists - please remove it before running STAR
+
+Dec 19 14:14:34 ...... FATAL ERROR, exiting
